@@ -1,0 +1,14 @@
+{
+  "appId": "com.xuchenzhe.petwallet",
+  "appName": "宠物账本",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "always",
+    "limitsNavigationsToAppBoundDomains": false
+  },
+  "server": {
+    "iosScheme": "capacitor",
+    "hostname": "localhost",
+    "androidScheme": "capacitor"
+  }
+}

@@ -7,7 +7,7 @@ src = root / "src"
 shell = (src / "shell.html").read_text(encoding="utf-8")
 css = (src / "style.css").read_text(encoding="utf-8")
 
-js_order = ["core.js", "ui.js", "views.js", "views2.js", "forms.js", "purchase.js", "app.js"]
+js_order = ["core.js", "persist.js", "ui.js", "views.js", "views2.js", "forms.js", "purchase.js", "app.js"]
 parts = []
 for name in js_order:
     body = (src / name).read_text(encoding="utf-8")

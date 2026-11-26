@@ -400,7 +400,7 @@ function triggerImport() {
 let snapList = [];
 async function openSnapshotSheet() {
   const list = await listSnapshots();
-  if (!list.length) { Toast.show('还没有快照，先点「立即生成快照」'); return; }
+  if (!list.length) { Toast.show(isNative() ? '还没有备份，先点「立即生成快照」' : '还没有快照，先点「立即生成快照」'); return; }
   snapList = list;
   const rows = list.map((it, i) => {
     const d = new Date(it.at);
@@ -412,7 +412,7 @@ async function openSnapshotSheet() {
     </button>`;
   }).join('');
   openSheet({
-    title: '浏览器快照',
+    title: isNative() ? '本地备份' : '浏览器快照',
     body: `<div class="hint" style="margin:0 2px 12px;line-height:1.6">只保留最近 7 份。恢复会覆盖当前数据，先用「导出完整备份」留一份更稳妥。</div><div class="list-card">${rows}</div>`,
     foot: `<button class="btn btn-ghost btn-block" data-act="closeSheet">收起</button>`
   });
@@ -441,5 +441,5 @@ function snapshotNowAction() {
   state.meta.snapshotAt = null;
   snapshotMaybe();
   persistNow();
-  Toast.show('快照已写入浏览器（保留最近 7 份）');
+  Toast.show(isNative() ? '备份已写入 App 文档目录（保留最近 7 份）' : '快照已写入浏览器（保留最近 7 份）');
 }

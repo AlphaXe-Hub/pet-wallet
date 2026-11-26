@@ -13,3 +13,19 @@ __pycache__/
 
 # 本地工作区（spec / 计划不纳入版本控制时可放开）
 # .scratch/
+
+# Capacitor / iOS
+www/
+ios/App/App/public/
+ios/App/Pods/
+ios/App/build/
+ios/App/App.xcodeproj/xcuserdata/
+ios/App/App.xcworkspace/xcuserdata/
+ios/App/DerivedData/
+*.xcuserstate
+.DS_Store
+
+# 构建产物与临时环境
+build/
+.xchome/
+cat-ledger-assets.zip

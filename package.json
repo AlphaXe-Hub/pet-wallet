@@ -1,0 +1,22 @@
+{
+  "name": "pet-wallet",
+  "version": "1.0.0",
+  "description": "宠物账本 · 毛孩子的补给与开销（iOS · Capacitor 封装）",
+  "private": true,
+  "scripts": {
+    "build": "python3 build.py && node scripts/prepare-www.js",
+    "sync": "npm run build && cap sync ios",
+    "open": "cap open ios",
+    "ios": "npm run sync && cap run ios"
+  },
+  "dependencies": {
+    "@capacitor-community/sqlite": "^8.1.1",
+    "@capacitor/core": "^8.6.3",
+    "@capacitor/filesystem": "^8.0.0",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.6.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.6.3"
+  }
+}

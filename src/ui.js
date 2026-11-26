@@ -185,8 +185,24 @@ function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 }
 
+/* 震动：原生优先走 Capacitor Haptics（iOS 的 Taptic Engine），
+   否则退回 Web Vibration API（Android）。不可用时静默返回 false，绝不阻塞业务。 */
 function haptic(kind) {
   try {
+    const cap = window.Capacitor;
+    const native = !!(cap && cap.isNativePlatform && cap.isNativePlatform());
+    if (native) {
+      const Haptics = cap.Plugins && cap.Plugins.Haptics;
+      if (Haptics) {
+        /* 语义映射沿用方案 §8.3：出库=tap 最轻，记账=success，告警=warning */
+        const p = kind === 'success' ? Haptics.notification({ type: 'SUCCESS' })
+          : kind === 'warning' ? Haptics.notification({ type: 'WARNING' })
+            : kind === 'celebrate' ? Haptics.impact({ style: 'MEDIUM' })
+              : Haptics.selectionStart();
+        if (p && p.catch) p.catch(() => {});
+        return true;
+      }
+    }
     if (!('vibrate' in navigator)) return false;
     const map = { tap: 10, success: 24, warning: [16, 40, 16], celebrate: [12, 30, 12, 30, 24] };
     navigator.vibrate(map[kind] || 10);

@@ -6,10 +6,11 @@
 ## 目录结构
 
 ```
-宠物账本-源码/
+pet-wallet/
 ├── 宠物账本.html      # 构建产物，双击即可离线运行
 ├── build.py           # 组装脚本：拼接 CSS/JS 到模板
 ├── README.md
+├── docs/              # 需求方案与 spec
 └── src/
     ├── shell.html     # 页面骨架，含 /*__CSS__*/ 与 /*__JS__*/ 占位符
     ├── style.css      # 全部样式（含桌面端适配、reduced-motion 降级）

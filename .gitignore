@@ -1,7 +1,15 @@
+# macOS
 .DS_Store
+
+# 日志与缓存
 *.log
 node_modules/
 __pycache__/
 *.pyc
+
+# 编辑器
 .idea/
 .vscode/
+
+# 本地工作区（spec / 计划不纳入版本控制时可放开）
+# .scratch/

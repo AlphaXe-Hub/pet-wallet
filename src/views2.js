@@ -79,7 +79,7 @@ function renderInsights() {
           <span class="am">¥${fmtMoney(b.amount)}</span>
         </div>`).join('')}
       </div>
-    </div>` : `<div class="empty" style="padding:18px">本月还没有支出${state.products.length ? '，记一笔就能看到结构' : ''}</div>`}
+    </div>` : `<div class="empty" style="padding:18px">${emptyArt('insights')}<div>本月还没有支出${state.products.length ? '，记一笔就能看到结构' : ''}</div></div>`}
   </div>`;
 
   /* 月度趋势 */

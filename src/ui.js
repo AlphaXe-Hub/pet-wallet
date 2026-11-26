@@ -57,7 +57,12 @@ const LOC_ICONS = {
   snow: '<path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9"/>',
   drop: '<path d="M12 3.6c3.6 4.4 5.4 7 5.4 9.6a5.4 5.4 0 1 1-10.8 0c0-2.6 1.8-5.2 5.4-9.6Z"/>',
   box: '<path d="M3.6 8.4 12 4l8.4 4.4v8.8L12 21.6l-8.4-4.4V8.4Z"/><path d="M3.9 8.5 12 12.9l8.1-4.4"/>',
-  moon: '<path d="M19.6 15.6A8.4 8.4 0 0 1 8.4 4.4 8.4 8.4 0 1 0 11.2 19.4 8.4 8.4 0 0 0 8.4-3.8Z"/>'
+  moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>'
+};
+/* 位置 SVG key ↔ 玻璃图标文件名（V1.1 P1） */
+const LOC_IMG = {
+  cabinet: 'loc-kitchen', plant: 'loc-balcony', snow: 'loc-fridge',
+  drop: 'loc-bath', box: 'loc-store', moon: 'loc-bedroom'
 };
 function catIcon(name, size) {
   const s = size || 20;
@@ -67,6 +72,9 @@ function catIcon(name, size) {
 }
 function locIcon(name, size) {
   const s = size || 20;
+  const key = LOC_IMG[name];
+  const img = key && hasImgIcon(key) ? imgIcon(key, s, 'loc-img') : '';
+  if (img) return img;
   return `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${LOC_ICONS[name] || LOC_ICONS.box}</svg>`;
 }
 
@@ -159,8 +167,13 @@ function petAvatarHTML(pet, size) {
   return petAvatar(pet ? pet.avatarRef : 'cat-orange');
 }
 
-/* 空状态插画 */
+/* 空状态插画：优先用 V1.1 P1 玻璃插画，缺失时回退线描 SVG */
 function emptyArt(kind) {
+  const artKey = kind === 'pet' ? 'empty-pets'
+    : kind === 'pantry' ? 'empty-pantry'
+    : kind === 'insights' ? 'empty-insights' : '';
+  const art = artKey && hasImgIcon(artKey) ? imgIcon(artKey, kind === 'pet' ? 150 : 140, 'empty-art-img') : '';
+  if (art) return art;
   if (kind === 'pet') {
     return `<svg width="150" height="126" viewBox="0 0 150 126" fill="none" stroke="#C9B29C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <ellipse cx="75" cy="112" rx="52" ry="7" fill="#FFF1DE" stroke="none"/>

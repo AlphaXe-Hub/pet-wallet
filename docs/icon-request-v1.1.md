@@ -62,6 +62,8 @@ blurry, cropped, tiny details, gradient background
 | `loc-store.png` | 储物间 | 玻璃收纳箱叠放 + 标签挂绳 |
 | `loc-bedroom.png` | 卧室 | 玻璃月牙 + 一颗小星星 + 软枕角 |
 
+> ✅ 2026-11-26 已完成：6 张 1024 RGBA 透明原图在 `assets/item-icon/`，经 `scripts/prepare-icons.py` 缩到 96px 落 `assets/icons-web/`，由 `locIcon()` 图片优先、线描 SVG 回退。
+
 ### P1 · 空状态插画（3 个）
 
 | 文件命名 | 场景 | 画面描述 |
@@ -70,6 +72,8 @@ blurry, cropped, tiny details, gradient background
 | `empty-pantry.png` | 还没有库存 | 空的玻璃储物箱，里面飘两片叶子/气泡，柔和留白 |
 | `empty-insights.png` | 还没有数据 | 空白的玻璃图表框架（柱状/折线轮廓），一只小猫坐在旁边看，留白多 |
 
+> ✅ 2026-11-26 已完成：3 张 360px 透明 PNG 落 `assets/icons-web/`，由 `emptyArt()` 接入「无宠物 / 无库存 / 无数据」，缺失时回退线描 SVG；洞察页「本月还没有支出」已挂 `empty-insights`。
+>
 > `illust-empty-bill.png` / `illust-empty-stat.png` 已有，可复用于「无账单」「无统计」；上面 3 个补齐「无宠物/无库存/无数据」。
 
 ### P2 · 宠物品种头像（可选，11 个）

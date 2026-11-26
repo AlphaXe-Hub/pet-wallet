@@ -32,3 +32,6 @@ cat-ledger-assets.zip
 
 # 构建期生成
 src/icons-data.js
+
+# 本地工具目录
+.workbuddy/

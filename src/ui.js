@@ -35,6 +35,15 @@ function icon(name, size, cls) {
   return `<svg class="ic ${cls || ''}" viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ''}</svg>`;
 }
 
+/* 图片图标：来自 ICON_DATA（构建期内联的 base64）。缺失时返回空字符串，调用方回退 SVG。 */
+function imgIcon(name, size, cls) {
+  const d = (typeof ICON_DATA !== 'undefined') && ICON_DATA[name];
+  if (!d) return '';
+  const s = size || 26;
+  return `<img class="ic-img ${cls || ''}" src="${d}" width="${s}" height="${s}" alt="" draggable="false">`;
+}
+function hasImgIcon(name){ return (typeof ICON_DATA !== 'undefined') && !!ICON_DATA[name]; }
+
 const CAT_ICONS = {
   food: '<path d="M7.2 8.4h9.6l1.7 11.6H5.5L7.2 8.4Z"/><path d="M7.6 8.4 9.2 4.4h5.6L16.4 8.4"/><path d="M9.6 13h4.8M10.2 16.6h3.6"/>',
   litter: '<path d="M3.5 10.5h17l-1.5 9.5H5L3.5 10.5Z"/><path d="M3.5 10.5 5.5 6h13l2 4.5"/><path d="M8 14v3.4M8 17.4 10 20M8 17.4 6 20"/>',
@@ -52,6 +61,8 @@ const LOC_ICONS = {
 };
 function catIcon(name, size) {
   const s = size || 20;
+  const img = hasImgIcon('cat-' + name) ? imgIcon('cat-' + name, s, 'cat-img') : '';
+  if (img) return img;
   return `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${CAT_ICONS[name] || CAT_ICONS.gift}</svg>`;
 }
 function locIcon(name, size) {

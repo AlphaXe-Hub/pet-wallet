@@ -2,9 +2,12 @@
   "appId": "com.xuchenzhe.petwallet",
   "appName": "宠物账本",
   "webDir": "www",
+  "backgroundColor": "#FFF9F0",
   "ios": {
-    "contentInset": "always",
-    "limitsNavigationsToAppBoundDomains": false
+    "contentInset": "never",
+    "limitsNavigationsToAppBoundDomains": false,
+    "backgroundColor": "#FFF9F0",
+    "scrollEnabled": true
   },
   "server": {
     "iosScheme": "capacitor",

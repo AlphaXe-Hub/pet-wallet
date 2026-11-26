@@ -31,11 +31,25 @@
   --ease-out:cubic-bezier(.22,1,.36,1);
   --dur-micro:140ms; --dur-card:240ms; --dur-page:300ms;
   --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  /* ---- Liquid Glass ---- */
+  --glass-bg: rgba(255,255,255,.52);
+  --glass-bg-strong: rgba(255,255,255,.72);
+  --glass-blur: blur(30px) saturate(180%);
+  --glass-rim: inset 0 0 0 1px rgba(255,255,255,.55);
+  --glass-specular: inset 0 1px 0 rgba(255,255,255,.85);
+  --glass-shadow: 0 10px 34px rgba(97,77,55,.18), 0 2px 8px rgba(97,77,55,.08);
+  --glass-tint-mint: rgba(47,174,140,.86);
+  --spring-bouncy: cubic-bezier(.34,1.56,.64,1);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
+html{background:var(--bg);height:100%}
+html,body{overscroll-behavior-y:none}
 body{
   background:var(--bg);
+  min-height:100%;
+  padding-top:0;
   color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
   font-size:16px; line-height:1.6;
@@ -139,7 +153,7 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 /* ================= 首页 / 顶栏 ================= */
 .top{
   display:flex;align-items:flex-start;justify-content:space-between;
-  padding:20px 2px 4px;
+  padding:calc(14px + var(--safe-t)) 2px 4px;
 }
 .top .hello{font-size:12px;color:var(--ink-3);letter-spacing:.08em;font-weight:600}
 .top h1{margin:2px 0 0;font-size:27px;line-height:1.25;font-weight:800;letter-spacing:-.02em}
@@ -394,11 +408,14 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 
 /* ================= 底部导航 ================= */
 .tabbar{
-  position:fixed;left:18px;right:18px;bottom:calc(12px + var(--safe-b));
-  height:64px;max-width:444px;margin:0 auto;
-  background:rgba(255,255,255,.92);backdrop-filter:blur(14px) saturate(1.4);
-  border-radius:22px;box-shadow:0 6px 24px rgba(97,77,55,.14), 0 0 0 1px rgba(240,230,216,.9);
+  position:fixed;left:16px;right:16px;bottom:calc(12px + var(--safe-b));
+  height:66px;max-width:448px;margin:0 auto;
+  background:var(--glass-bg);
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  border-radius:26px;
+  box-shadow:var(--glass-shadow),var(--glass-rim),var(--glass-specular);
   display:flex;align-items:center;justify-content:space-around;padding:0 6px;z-index:40;
+  transition:transform var(--dur-card) var(--spring-bouncy);
 }
 .tab{
   flex:1;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
@@ -406,6 +423,51 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
   transition:color var(--dur-micro);
 }
 .tab.on{color:var(--accent-dark)}
+.ic-img{display:block;object-fit:contain}
+.tab .tab-ic{width:28px;height:28px;object-fit:contain;
+  filter:grayscale(.1) saturate(.85) opacity(.85);
+  transform:scale(.96);
+  transition:transform 200ms var(--spring-bouncy),filter 200ms var(--ease-out),opacity 200ms;}
+.tab.on .tab-ic{filter:none;opacity:1;transform:translateY(-1px) scale(1.12)}
+.tab:active .tab-ic{transform:scale(.9);transition-duration:120ms}
+.cat-img{object-fit:contain}
+
+/* ---- V1.1 动效：错峰入场 / 长按抖动 / 成功弹跳 ---- */
+.pet-grid > *{animation:cardIn var(--dur-card) var(--ease-out) both}
+.pet-grid > *:nth-child(1){animation-delay:0ms}
+.pet-grid > *:nth-child(2){animation-delay:50ms}
+.pet-grid > *:nth-child(3){animation-delay:100ms}
+.pet-grid > *:nth-child(4){animation-delay:150ms}
+.pet-grid > *:nth-child(5){animation-delay:200ms}
+.pet-grid > *:nth-child(n+6){animation-delay:250ms}
+.list-card > *{animation:cardIn var(--dur-card) var(--ease-out) both}
+.list-card > *:nth-child(1){animation-delay:0ms}
+.list-card > *:nth-child(2){animation-delay:40ms}
+.list-card > *:nth-child(3){animation-delay:80ms}
+.list-card > *:nth-child(4){animation-delay:120ms}
+.list-card > *:nth-child(5){animation-delay:160ms}
+.list-card > *:nth-child(n+6){animation-delay:200ms}
+
+@keyframes jiggle{
+  0%{transform:rotate(0) scale(1)}
+  15%{transform:rotate(-1.4deg) scale(.985)}
+  30%{transform:rotate(1.3deg) scale(.985)}
+  45%{transform:rotate(-1deg) scale(.99)}
+  60%{transform:rotate(.8deg) scale(.99)}
+  75%{transform:rotate(-.4deg) scale(1)}
+  100%{transform:rotate(0) scale(1)}
+}
+.shaking{animation:jiggle 420ms var(--ease-out) both}
+
+@keyframes celebrateJump{
+  0%{transform:translateY(0) scale(1,1)}
+  18%{transform:translateY(2px) scale(1.06,.9)}
+  45%{transform:translateY(-14px) scale(.96,1.07)}
+  70%{transform:translateY(1px) scale(1.04,.95)}
+  85%{transform:translateY(0) scale(.985,1.01)}
+  100%{transform:translateY(0) scale(1,1)}
+}
+.celebrate{animation:celebrateJump 620ms var(--spring-bouncy) both}
 .tab .dot-badge{
   position:absolute;top:10px;right:calc(50% - 20px);min-width:16px;height:16px;padding:0 4px;
   background:var(--danger);color:#fff;border-radius:8px;font-size:10px;font-weight:800;
@@ -413,7 +475,10 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 }
 .fab{
   position:fixed;right:22px;bottom:calc(88px + var(--safe-b));width:58px;height:58px;border-radius:50%;
-  background:var(--accent);color:#fff;box-shadow:var(--shadow-btn), 0 8px 22px rgba(47,174,140,.28);
+  background:var(--glass-tint-mint);
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  color:#fff;
+  box-shadow:var(--shadow-btn),var(--glass-shadow),var(--glass-rim),var(--glass-specular);
   display:flex;align-items:center;justify-content:center;z-index:41;
   transition:transform var(--dur-micro) var(--ease-spring), box-shadow var(--dur-micro);
 }
@@ -425,8 +490,10 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .sheet{
   position:fixed;left:0;right:0;bottom:0;z-index:61;
-  background:var(--bg);border-radius:26px 26px 0 0;
-  box-shadow:0 -10px 40px rgba(97,77,55,.2);
+  background:var(--glass-bg-strong);
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  border-radius:26px 26px 0 0;
+  box-shadow:0 -10px 40px rgba(97,77,55,.2),var(--glass-rim),var(--glass-specular);
   max-height:92vh;display:flex;flex-direction:column;
   animation:sheetUp var(--dur-card) var(--ease-out) both;
 }
@@ -500,9 +567,11 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 /* toast / 飘字 / 撒星星 */
 #toasts{position:fixed;left:0;right:0;bottom:calc(100px + var(--safe-b));z-index:90;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
 .toast{
-  background:rgba(61,58,54,.92);color:#fff;font-size:13px;font-weight:600;
-  padding:9px 16px;border-radius:var(--r-pill);box-shadow:0 6px 20px rgba(0,0,0,.18);
-  animation:toastIn 260ms var(--ease-spring) both;
+  background:rgba(61,58,54,.72);color:#fff;font-size:13px;font-weight:600;
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  padding:9px 16px;border-radius:var(--r-pill);
+  box-shadow:0 6px 20px rgba(0,0,0,.18),var(--glass-rim),var(--glass-specular);
+  animation:toastIn 260ms var(--spring-bouncy) both;
   max-width:88vw;text-align:center;
 }
 .toast.out{animation:toastOut 220ms var(--ease-out) forwards}

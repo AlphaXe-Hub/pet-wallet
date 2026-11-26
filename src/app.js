@@ -56,7 +56,7 @@ function mountChrome() {
   bar.id = 'tabbar';
   bar.className = 'tabbar';
   bar.innerHTML = tabs.map(t => `<button class="tab" data-act="tab" data-route="${t.id}" data-tab="${t.id}">
-    ${icon(t.icon, 22)}<span>${t.label}</span><span class="dot-badge hidden" data-badge="${t.id}"></span>
+    ${imgIcon('tab-' + t.id, 26, 'tab-ic') || icon(t.icon, 22)}<span>${t.label}</span><span class="dot-badge hidden" data-badge="${t.id}"></span>
   </button>`).join('');
   document.body.appendChild(bar);
 
@@ -486,6 +486,8 @@ function bindLongPress() {
       longFired = true;
       longFiredAt = Date.now();
       haptic('tap');
+      el.classList.add('shaking');
+      setTimeout(() => el.classList.remove('shaking'), 440);
       openConsumeSheet(el.dataset.id, { x: e.clientX, y: e.clientY });
     }, 430);
   });

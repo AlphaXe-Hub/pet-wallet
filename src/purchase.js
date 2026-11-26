@@ -201,6 +201,9 @@ function savePurchase() {
   render();
   const cx = window.innerWidth / 2, cy = window.innerHeight * 0.58;
   starBurst(cx, cy);
+  /* 成功弹跳：优先作用在首页汇总条，退化到第一张卡片 */
+  const bounceEl = document.querySelector('#view .summary, #view .pet-card, #view .prod-card');
+  if (bounceEl) { bounceEl.classList.remove('celebrate'); void bounceEl.offsetWidth; bounceEl.classList.add('celebrate'); }
   if (!purchaseEditId && afterStreak > beforeStreak) {
     setTimeout(() => Toast.show(`连续记账 ${afterStreak} 天 · 已入库`, 2200), 260);
   } else {

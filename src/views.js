@@ -18,14 +18,14 @@ function renderGallery() {
       <h1>毛孩子的<span>账本</span></h1>
     </div>
     ${streak.current > 0 ? `<div class="streak" title="连续记账">
-      <span class="flame" style="color:#FF8A5B">${icon('flame', 18)}</span>
+      <span class="flame" style="color:#2FAE8C">${icon('flame', 18)}</span>
       <span class="n">${streak.current}</span>
       <span class="t">连续天</span>
     </div>` : `<div class="streak"><span style="color:#C9B8E8">${icon('star', 18)}</span><span class="n">Lv ${levelInfo().level}</span><span class="t">记账等级</span></div>`}
   </div>`;
 
   if (needBackup && hasData) {
-    html += `<button class="alertbar backup" data-act="goBackup" style="width:100%;border:1px solid #FBD3C1">
+    html += `<button class="alertbar backup" data-act="goBackup" style="width:100%;border:1px solid #B7E9DB">
       <span>${icon('info', 16)} 上次备份是 ${state.meta.lastBackupAt ? dateLabel(String(state.meta.lastBackupAt).slice(0, 10)) : '从未备份'}，建议导出一次留个副本</span>
       <span style="font-weight:700">备份 →</span>
     </button>`;

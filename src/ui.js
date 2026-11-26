@@ -221,7 +221,7 @@ function starBurst(x, y) {
   if (reducedMotion()) return;
   const host = fxHost();
   const glyphs = ['✦', '✧', '★', '✶', '·'];
-  const colors = ['#FF8A5B', '#FFB443', '#7BC8B0', '#F49AC1', '#C9B8E8'];
+  const colors = ['#2FAE8C', '#FFB443', '#7BC8B0', '#F49AC1', '#C9B8E8'];
   for (let i = 0; i < 14; i++) {
     const s = document.createElement('span');
     s.className = 'star';

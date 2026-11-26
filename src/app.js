@@ -511,7 +511,7 @@ function syncPurchaseGuard() {
 /* ---------- 启动 ---------- */
 (async function boot() {
   const app = document.getElementById('app');
-  app.innerHTML = `<div class="boot"><div class="paw" style="color:#FF8A5B">${icon('paw', 34)}</div><div style="margin-top:10px">正在打开账本…</div></div>`;
+  app.innerHTML = `<div class="boot"><div class="paw" style="color:#2FAE8C">${icon('paw', 34)}</div><div style="margin-top:10px">正在打开账本…</div></div>`;
   readHash();
   let info = { fresh: true, lastOpen: null };
   try {

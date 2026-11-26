@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#FFF9F0">
 <meta name="description" content="宠物账本：把「钱」和「库存」接起来算的家用宠物物资管家。补给看板 + 消费洞察 + 日均成本榜。">
 <title>宠物账本 · 毛孩子的补给与开销</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23FF8A5B'/%3E%3Ctext x='50' y='66' font-size='46' text-anchor='middle' fill='white'%3E%F0%9F%90%BE%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%232FAE8C'/%3E%3Ctext x='50' y='66' font-size='46' text-anchor='middle' fill='white'%3E%F0%9F%90%BE%3C/text%3E%3C/svg%3E">
 <style>
 /* ============================================================
    宠物账本 · 设计 tokens（奶油软糖 + 纸感手账）
@@ -19,9 +19,9 @@
   --ink-2:#7A736B;
   --ink-3:#B3A79B;
   --line:#F0E6D8;
-  --accent:#FF8A5B;
-  --accent-dark:#E87348;
-  --accent-soft:#FFE8DD;
+  --accent:#2FAE8C;
+  --accent-dark:#22876C;
+  --accent-soft:#DDF4EC;
   --mint:#7BC8B0;
   --mint-soft:#E3F5EF;
   --amber:#FFB443;
@@ -172,7 +172,7 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
   animation:slideDown var(--dur-card) var(--ease-out) both;
 }
 @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
-.alertbar.backup{background:var(--accent-soft);border-color:#FBD3C1;color:#C1603A}
+.alertbar.backup{background:var(--accent-soft);border-color:#B7E9DB;color:#1F6E58}
 
 /* ================= 宠物画廊 ================= */
 .pet-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
@@ -279,7 +279,7 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
   transition:transform var(--dur-micro) var(--ease-spring), background var(--dur-micro);
   touch-action:manipulation;
 }
-.out-btn:active{transform:scale(.9);background:#FFDCCB}
+.out-btn:active{transform:scale(.9);background:#CDF3E7}
 .out-btn small{font-size:9px;font-weight:700;color:#C9876B}
 .out-btn:disabled{opacity:.35}
 
@@ -342,10 +342,10 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 .trend{display:flex;align-items:flex-end;gap:8px;height:120px;padding-top:6px}
 .trend .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
 .trend .bar{
-  width:100%;max-width:30px;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,#FFC3A6,#FF9A6B);
+  width:100%;max-width:30px;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,#C8EFE2,#A5E3D1);
   transition:height 600ms var(--ease-spring);min-height:3px;position:relative;
 }
-.trend .bar.cur{background:linear-gradient(180deg,var(--accent),#F4713F)}
+.trend .bar.cur{background:linear-gradient(180deg,var(--accent),#1F9A7C)}
 .trend .bar .v{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--ink-2);white-space:nowrap;font-variant-numeric:tabular-nums}
 .trend .lb{font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
 
@@ -386,7 +386,7 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 .me-hero .info .a{font-size:15px;font-weight:800}
 .me-hero .info .b{font-size:12px;color:var(--ink-2);margin-top:2px}
 .me-hero .bar{height:6px;border-radius:3px;background:var(--surface-alt);margin-top:8px;overflow:hidden}
-.me-hero .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#FFC46B);border-radius:3px;transition:width 600ms var(--ease-spring)}
+.me-hero .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#8FDCC4);border-radius:3px;transition:width 600ms var(--ease-spring)}
 
 .list-card{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-1);overflow:hidden;margin-top:12px}
 .list-row{
@@ -423,7 +423,7 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 }
 .fab{
   position:fixed;right:22px;bottom:calc(88px + var(--safe-b));width:58px;height:58px;border-radius:50%;
-  background:var(--accent);color:#fff;box-shadow:var(--shadow-btn), 0 8px 22px rgba(232,115,72,.28);
+  background:var(--accent);color:#fff;box-shadow:var(--shadow-btn), 0 8px 22px rgba(47,174,140,.28);
   display:flex;align-items:center;justify-content:center;z-index:41;
   transition:transform var(--dur-micro) var(--ease-spring), box-shadow var(--dur-micro);
 }
@@ -1772,7 +1772,7 @@ function starBurst(x, y) {
   if (reducedMotion()) return;
   const host = fxHost();
   const glyphs = ['✦', '✧', '★', '✶', '·'];
-  const colors = ['#FF8A5B', '#FFB443', '#7BC8B0', '#F49AC1', '#C9B8E8'];
+  const colors = ['#2FAE8C', '#FFB443', '#7BC8B0', '#F49AC1', '#C9B8E8'];
   for (let i = 0; i < 14; i++) {
     const s = document.createElement('span');
     s.className = 'star';
@@ -1921,14 +1921,14 @@ function renderGallery() {
       <h1>毛孩子的<span>账本</span></h1>
     </div>
     ${streak.current > 0 ? `<div class="streak" title="连续记账">
-      <span class="flame" style="color:#FF8A5B">${icon('flame', 18)}</span>
+      <span class="flame" style="color:#2FAE8C">${icon('flame', 18)}</span>
       <span class="n">${streak.current}</span>
       <span class="t">连续天</span>
     </div>` : `<div class="streak"><span style="color:#C9B8E8">${icon('star', 18)}</span><span class="n">Lv ${levelInfo().level}</span><span class="t">记账等级</span></div>`}
   </div>`;
 
   if (needBackup && hasData) {
-    html += `<button class="alertbar backup" data-act="goBackup" style="width:100%;border:1px solid #FBD3C1">
+    html += `<button class="alertbar backup" data-act="goBackup" style="width:100%;border:1px solid #B7E9DB">
       <span>${icon('info', 16)} 上次备份是 ${state.meta.lastBackupAt ? dateLabel(String(state.meta.lastBackupAt).slice(0, 10)) : '从未备份'}，建议导出一次留个副本</span>
       <span style="font-weight:700">备份 →</span>
     </button>`;
@@ -2442,7 +2442,7 @@ function levelRing(lv) {
   const p = Math.max(0, Math.min(1, lv.progress || 0));
   return `<svg width="58" height="58" viewBox="0 0 58 58">
     <circle cx="29" cy="29" r="${r}" fill="none" stroke="#F2E7D8" stroke-width="5"/>
-    <circle cx="29" cy="29" r="${r}" fill="none" stroke="#FF8A5B" stroke-width="5" stroke-linecap="round"
+    <circle cx="29" cy="29" r="${r}" fill="none" stroke="#2FAE8C" stroke-width="5" stroke-linecap="round"
       stroke-dasharray="${C * p} ${C}" transform="rotate(-90 29 29)"/>
   </svg>`;
 }
@@ -3875,7 +3875,7 @@ function syncPurchaseGuard() {
 /* ---------- 启动 ---------- */
 (async function boot() {
   const app = document.getElementById('app');
-  app.innerHTML = `<div class="boot"><div class="paw" style="color:#FF8A5B">${icon('paw', 34)}</div><div style="margin-top:10px">正在打开账本…</div></div>`;
+  app.innerHTML = `<div class="boot"><div class="paw" style="color:#2FAE8C">${icon('paw', 34)}</div><div style="margin-top:10px">正在打开账本…</div></div>`;
   readHash();
   let info = { fresh: true, lastOpen: null };
   try {

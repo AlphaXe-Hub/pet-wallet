@@ -282,7 +282,7 @@ function levelRing(lv) {
   const p = Math.max(0, Math.min(1, lv.progress || 0));
   return `<svg width="58" height="58" viewBox="0 0 58 58">
     <circle cx="29" cy="29" r="${r}" fill="none" stroke="#F2E7D8" stroke-width="5"/>
-    <circle cx="29" cy="29" r="${r}" fill="none" stroke="#FF8A5B" stroke-width="5" stroke-linecap="round"
+    <circle cx="29" cy="29" r="${r}" fill="none" stroke="#2FAE8C" stroke-width="5" stroke-linecap="round"
       stroke-dasharray="${C * p} ${C}" transform="rotate(-90 29 29)"/>
   </svg>`;
 }

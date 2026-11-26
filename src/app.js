@@ -60,6 +60,12 @@ function mountChrome() {
   </button>`).join('');
   document.body.appendChild(bar);
 
+  if (!document.getElementById('topscrim')) {
+    const scrim = document.createElement('div');
+    scrim.id = 'topscrim';
+    document.body.appendChild(scrim);
+  }
+
   const fab = document.createElement('button');
   fab.id = 'fab';
   fab.className = 'fab';

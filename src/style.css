@@ -153,6 +153,15 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 .ic{flex:none}
 
 /* ================= 首页 / 顶栏 ================= */
+/* 顶部状态栏渐变遮罩：内容滚动时不在灵动岛/时钟下显得脏 */
+#topscrim{
+  position:fixed;top:0;left:0;right:0;z-index:35;pointer-events:none;
+  height:calc(var(--safe-t) + 16px);
+  background:linear-gradient(180deg,
+    var(--bg) 0%,
+    rgba(255,249,240,.92) calc(var(--safe-t) + 2px),
+    rgba(255,249,240,0) 100%);
+}
 .top{
   display:flex;align-items:flex-start;justify-content:space-between;
   padding:calc(14px + var(--safe-t)) 2px 4px;

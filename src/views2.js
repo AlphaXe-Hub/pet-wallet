@@ -106,7 +106,7 @@ function renderInsights() {
     <h3>日均成本榜 <span style="font-size:11px;font-weight:600;color:var(--ink-3)">单价 × 日均消耗</span></h3>
     <div class="hint" style="margin:-4px 0 8px">这才是「隐形贵」的照妖镜：一顿罐头可能比一袋粮更烧钱。</div>
     ${ranking.length ? ranking.map((r, i) => `<div class="rank-row">
-      <div class="rank-no ${i === 0 ? 'top' : ''}">${i + 1}</div>
+      <div class="rank-no ${i < 3 ? 'r' + (i + 1) : ''}">${i + 1}</div>
       <div class="rank-main">
         <div class="nm">${esc(r.name)}</div>
         <div class="sub">¥${fmt2(r.unitPrice)} / 件 × ${r.dailyUsage} 件/天</div>
@@ -236,28 +236,28 @@ function renderMe() {
   html += `<div class="section-h"><h2>${icon('download', 18)} 数据</h2><span class="sub">${lastBackup ? `上次备份 ${dateLabel(lastBackup)}${backupDays > 7 ? ' · 该备份了' : ''}` : '从未备份'}</span></div>
   <div class="list-card">
     <button class="list-row" data-act="exportJSON">
-      <span class="ic-wrap" style="background:var(--mint-soft);color:#3D8C74">${icon('download', 18)}</span>
+      <span class="ic-wrap" style="color:#3D8C74">${icon('download', 30)}</span>
       <span class="tt"><span class="a">导出完整备份（JSON）</span><span class="b">全部表结构 + 数据，换设备能完整恢复</span></span>
     </button>
     <button class="list-row" data-act="exportCSV">
-      <span class="ic-wrap" style="background:var(--surface-alt);color:#8C7A64">${icon('edit', 18)}</span>
+      <span class="ic-wrap" style="color:#8C7A64">${icon('edit', 30)}</span>
       <span class="tt"><span class="a">导出账单（CSV）</span><span class="b">可用 Excel 二次分析</span></span>
     </button>
     <button class="list-row" data-act="importJSON">
-      <span class="ic-wrap" style="background:#EFE9FB;color:#7A66AC">${icon('upload', 18)}</span>
+      <span class="ic-wrap" style="color:#7A66AC">${icon('upload', 30)}</span>
       <span class="tt"><span class="a">从备份恢复</span><span class="b">会覆盖当前全部数据，导入前会确认</span></span>
     </button>
     <button class="list-row" data-act="openSnapshots">
-      <span class="ic-wrap" style="background:#EFF6F1;color:#5E8B72">${icon('refresh', 18)}</span>
-      <span class="tt"><span class="a">从浏览器快照恢复</span><span class="b">最近 7 份，点开挑一份回退</span></span>
+      <span class="ic-wrap" style="color:#5E8B72">${icon('refresh', 30)}</span>
+      <span class="tt"><span class="a">${isNative() ? '从本地备份恢复' : '从浏览器快照恢复'}</span><span class="b">最近 7 份，点开挑一份回退</span></span>
     </button>
     <button class="list-row" data-act="snapshotNow">
-      <span class="ic-wrap" style="background:var(--surface-alt)">${icon('refresh', 18)}</span>
-      <span class="tt"><span class="a">立即生成快照</span><span class="b">浏览器内保留最近 7 份</span></span>
+      <span class="ic-wrap">${icon('refresh', 30)}</span>
+      <span class="tt"><span class="a">${isNative() ? '立即生成备份' : '立即生成快照'}</span><span class="b">${isNative() ? 'App 文档目录保留最近 7 份' : '浏览器内保留最近 7 份'}</span></span>
     </button>
     <button class="list-row" data-act="toggleAutoBackup">
-      <span class="ic-wrap" style="background:var(--surface-alt)">${icon('clock', 18)}</span>
-      <span class="tt"><span class="a">自动快照</span><span class="b">每小时最多一份</span></span>
+      <span class="ic-wrap">${icon('clock', 30)}</span>
+      <span class="tt"><span class="a">${isNative() ? '自动备份' : '自动快照'}</span><span class="b">每小时最多一份</span></span>
       <span style="width:44px;height:26px;border-radius:13px;background:${state.meta.autoBackup ? 'var(--mint)' : '#E3D7C7'};position:relative;flex:none;transition:background .2s">
         <span style="position:absolute;top:3px;left:${state.meta.autoBackup ? '21px' : '3px'};width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s var(--ease-spring)"></span>
       </span>
@@ -266,12 +266,14 @@ function renderMe() {
 
   html += `<div class="section-h"><h2>${icon('info', 18)} 关于</h2></div>
   <div class="list-card">
-    <div class="list-row"><span class="tt"><span class="a">宠物账本 v1</span><span class="b">纯 Web · 数据只存在这台设备的浏览器里</span></span><span class="tag-mini">离线可用</span></div>
+    <div class="list-row"><span class="tt"><span class="a">宠物账本 v${APP_VERSION}</span></span><span class="tag-mini">离线可用</span></div>
     <button class="list-row" data-act="loadDemo"><span class="tt"><span class="a">载入示例数据</span><span class="b">两只宠物 + 4 个月账单，用来试功能</span></span></button>
     <button class="list-row" data-act="clearData"><span class="tt"><span class="a" style="color:var(--danger)">清空全部数据</span><span class="b">不可撤销，建议先导出备份</span></span></button>
   </div>
   <div class="hint" style="margin:14px 4px 0;line-height:1.7">
-    ${icon('alert', 12)} 浏览器存储可能被清理（清缓存、Safari 7 天未访问回收、隐身模式关闭）。<b>数据安全只能靠定期导出兜底</b>，这是纯 Web 形态的真实代价。动效会跟随系统的「减少动态效果」设置自动降级。
+    ${icon('alert', 12)} ${isNative()
+      ? '数据保存在 App 本地数据库，并每小时自动备份到 App 文档目录。<b>换设备请用上面的「导出完整备份」迁移</b>。'
+      : '浏览器存储可能被清理（清缓存、Safari 7 天未访问回收、隐身模式关闭）。<b>数据安全只能靠定期导出兜底</b>。'}动效会跟随系统的「减少动态效果」设置自动降级。
   </div>`;
 
   return html;

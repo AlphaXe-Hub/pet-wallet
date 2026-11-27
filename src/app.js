@@ -99,6 +99,20 @@ function updateChrome() {
    ============================================================ */
 function bindEvents() {
   document.addEventListener('click', onClick);
+
+  /* 全局触感：所有可点元素都触发一次轻震；主操作/保存用 medium。
+     由于监听器注册在 onClick 之后且 haptic() 有 90ms 去重，
+     已有语义震动（success/warning）的交互不会被重复震两下。 */
+  document.addEventListener('click', e => {
+    const el = e.target.closest('button, [data-act], .list-row, .tab, .opt, .chip, .fab, .avatar-opt, .switch, input[type="checkbox"], input[type="radio"]');
+    if (!el || el.disabled) return;
+    if (el.dataset && el.dataset.nohaptic === '1') return;
+    const act = el.dataset && el.dataset.act;
+    const primary = el.classList.contains('btn-primary') ||
+      act === 'savePurchase' || act === 'savePet' || act === 'saveProduct' ||
+      act === 'saveCategory' || act === 'saveLocation' || act === 'confirmAdjust';
+    haptic(primary ? 'medium' : 'tap');
+  });
   document.addEventListener('input', onInput);
   document.addEventListener('change', onChange);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
@@ -286,7 +300,7 @@ function onClick(e) {
       render();
       if (done > 0) {
         floatText('-1', anchor.x, anchor.y);
-        haptic('tap');
+        haptic('light');
         setTimeout(() => Toast.show('已出库 1 件'), 80);
       } else {
         Toast.show('这件已经没有库存了');

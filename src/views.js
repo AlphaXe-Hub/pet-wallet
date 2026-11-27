@@ -17,11 +17,7 @@ function renderGallery() {
       <div class="hello">${greeting()} · 今天 ${dateLabel(today)}</div>
       <h1>毛孩子的<span>账本</span></h1>
     </div>
-    ${streak.current > 0 ? `<div class="streak" title="连续记账">
-      <span class="flame" style="color:#2FAE8C">${icon('flame', 18)}</span>
-      <span class="n">${streak.current}</span>
-      <span class="t">连续天</span>
-    </div>` : `<div class="streak"><span style="color:#C9B8E8">${icon('star', 18)}</span><span class="n">Lv ${levelInfo().level}</span><span class="t">记账等级</span></div>`}
+
   </div>`;
 
   if (needBackup && hasData) {

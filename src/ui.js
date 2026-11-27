@@ -1,3 +1,6 @@
+/* 应用版本（关于页显示，发布时同步 tag） */
+const APP_VERSION = '1.1.2';
+
 /* ============================================================
    图形资产：手写线描图标 / 宠物头像 / 品类图标
    ============================================================ */
@@ -211,24 +214,33 @@ function esc(s) {
 
 /* 震动：原生优先走 Capacitor Haptics（iOS 的 Taptic Engine），
    否则退回 Web Vibration API（Android）。不可用时静默返回 false，绝不阻塞业务。 */
+let __lastHaptic = 0;
+/* kind: tap(最轻) / light / medium / success / warning / celebrate
+   震动强度与动画力度对应：轻操作=selection，主操作=medium，结果=notification */
 function haptic(kind) {
   try {
+    const now = Date.now();
+    /* 去重：同一次点击内避免「通用轻震 + 语义震」连续触发两下 */
+    if (now - __lastHaptic < 90) return false;
+    __lastHaptic = now;
     const cap = window.Capacitor;
     const native = !!(cap && cap.isNativePlatform && cap.isNativePlatform());
     if (native) {
       const Haptics = cap.Plugins && cap.Plugins.Haptics;
       if (Haptics) {
-        /* 语义映射沿用方案 §8.3：出库=tap 最轻，记账=success，告警=warning */
-        const p = kind === 'success' ? Haptics.notification({ type: 'SUCCESS' })
-          : kind === 'warning' ? Haptics.notification({ type: 'WARNING' })
-            : kind === 'celebrate' ? Haptics.impact({ style: 'MEDIUM' })
-              : Haptics.selectionStart();
+        let p;
+        if (kind === 'success') p = Haptics.notification({ type: 'SUCCESS' });
+        else if (kind === 'warning') p = Haptics.notification({ type: 'WARNING' });
+        else if (kind === 'celebrate') p = Haptics.impact({ style: 'HEAVY' });
+        else if (kind === 'medium') p = Haptics.impact({ style: 'MEDIUM' });
+        else if (kind === 'light') p = Haptics.impact({ style: 'LIGHT' });
+        else p = Haptics.selectionStart();
         if (p && p.catch) p.catch(() => {});
         return true;
       }
     }
     if (!('vibrate' in navigator)) return false;
-    const map = { tap: 10, success: 24, warning: [16, 40, 16], celebrate: [12, 30, 12, 30, 24] };
+    const map = { tap: 8, light: 12, medium: 20, success: 24, warning: [16, 40, 16], celebrate: [14, 30, 14, 30, 26] };
     navigator.vibrate(map[kind] || 10);
     return true;
   } catch (e) { return false; }

@@ -379,10 +379,13 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 }
 .rank-row:last-child{border-bottom:0}
 .rank-no{
-  width:24px;height:24px;border-radius:50%;background:var(--surface-alt);flex:none;
-  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--ink-2);
+  width:24px;height:24px;min-width:24px;min-height:24px;align-self:center;
+  border-radius:50%;background:var(--surface-alt);flex:none;line-height:1;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--ink-3);
 }
-.rank-no.top{background:var(--accent);color:#fff}
+.rank-no.r1{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(47,174,140,.4)}
+.rank-no.r2{background:#A9DCCB;color:#1F6E58}
+.rank-no.r3{background:#FBE0BE;color:#9A5F2A}
 .rank-main{flex:1;min-width:0}
 .rank-main .nm{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rank-main .sub{font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
@@ -420,7 +423,8 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 }
 .list-row:last-child{border-bottom:0}
 .list-row:active{background:var(--surface-alt)}
-.list-row .ic-wrap{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--surface-alt)}
+.list-row .ic-wrap{width:40px;height:40px;border-radius:0;display:flex;align-items:center;justify-content:center;flex:none;background:transparent}
+.list-row .ic-wrap img,.list-row .ic-wrap svg{width:32px;height:32px;object-fit:contain}
 /* V1.1: 品类/位置图标去掉底色块，直接放大图标 */
 .list-row .ic-plain{width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex:none;background:transparent}
 .list-row .ic-plain img,.list-row .ic-plain svg{width:32px;height:32px;object-fit:contain}
@@ -582,7 +586,8 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
   background:var(--surface);box-shadow:var(--shadow-1);text-align:left;width:100%;
 }
 .opt:active{background:var(--surface-alt)}
-.opt .oi{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none}
+.opt .oi{width:40px;height:40px;border-radius:0;display:flex;align-items:center;justify-content:center;flex:none;background:transparent}
+.opt .oi img,.opt .oi svg{width:32px;height:32px;object-fit:contain}
 .opt .ot{flex:1;min-width:0}
 .opt .ot .a{font-size:15px;font-weight:700;display:block}
 .opt .ot .b{font-size:11px;color:var(--ink-3);display:block}
@@ -2031,6 +2036,9 @@ async function initStore() {
 
 
 /* ==================== ui.js ==================== */
+/* 应用版本（关于页显示，发布时同步 tag） */
+const APP_VERSION = '1.1.2';
+
 /* ============================================================
    图形资产：手写线描图标 / 宠物头像 / 品类图标
    ============================================================ */
@@ -2244,24 +2252,33 @@ function esc(s) {
 
 /* 震动：原生优先走 Capacitor Haptics（iOS 的 Taptic Engine），
    否则退回 Web Vibration API（Android）。不可用时静默返回 false，绝不阻塞业务。 */
+let __lastHaptic = 0;
+/* kind: tap(最轻) / light / medium / success / warning / celebrate
+   震动强度与动画力度对应：轻操作=selection，主操作=medium，结果=notification */
 function haptic(kind) {
   try {
+    const now = Date.now();
+    /* 去重：同一次点击内避免「通用轻震 + 语义震」连续触发两下 */
+    if (now - __lastHaptic < 90) return false;
+    __lastHaptic = now;
     const cap = window.Capacitor;
     const native = !!(cap && cap.isNativePlatform && cap.isNativePlatform());
     if (native) {
       const Haptics = cap.Plugins && cap.Plugins.Haptics;
       if (Haptics) {
-        /* 语义映射沿用方案 §8.3：出库=tap 最轻，记账=success，告警=warning */
-        const p = kind === 'success' ? Haptics.notification({ type: 'SUCCESS' })
-          : kind === 'warning' ? Haptics.notification({ type: 'WARNING' })
-            : kind === 'celebrate' ? Haptics.impact({ style: 'MEDIUM' })
-              : Haptics.selectionStart();
+        let p;
+        if (kind === 'success') p = Haptics.notification({ type: 'SUCCESS' });
+        else if (kind === 'warning') p = Haptics.notification({ type: 'WARNING' });
+        else if (kind === 'celebrate') p = Haptics.impact({ style: 'HEAVY' });
+        else if (kind === 'medium') p = Haptics.impact({ style: 'MEDIUM' });
+        else if (kind === 'light') p = Haptics.impact({ style: 'LIGHT' });
+        else p = Haptics.selectionStart();
         if (p && p.catch) p.catch(() => {});
         return true;
       }
     }
     if (!('vibrate' in navigator)) return false;
-    const map = { tap: 10, success: 24, warning: [16, 40, 16], celebrate: [12, 30, 12, 30, 24] };
+    const map = { tap: 8, light: 12, medium: 20, success: 24, warning: [16, 40, 16], celebrate: [14, 30, 14, 30, 26] };
     navigator.vibrate(map[kind] || 10);
     return true;
   } catch (e) { return false; }
@@ -2442,11 +2459,7 @@ function renderGallery() {
       <div class="hello">${greeting()} · 今天 ${dateLabel(today)}</div>
       <h1>毛孩子的<span>账本</span></h1>
     </div>
-    ${streak.current > 0 ? `<div class="streak" title="连续记账">
-      <span class="flame" style="color:#2FAE8C">${icon('flame', 18)}</span>
-      <span class="n">${streak.current}</span>
-      <span class="t">连续天</span>
-    </div>` : `<div class="streak"><span style="color:#C9B8E8">${icon('star', 18)}</span><span class="n">Lv ${levelInfo().level}</span><span class="t">记账等级</span></div>`}
+
   </div>`;
 
   if (needBackup && hasData) {
@@ -2788,7 +2801,7 @@ function renderInsights() {
     <h3>日均成本榜 <span style="font-size:11px;font-weight:600;color:var(--ink-3)">单价 × 日均消耗</span></h3>
     <div class="hint" style="margin:-4px 0 8px">这才是「隐形贵」的照妖镜：一顿罐头可能比一袋粮更烧钱。</div>
     ${ranking.length ? ranking.map((r, i) => `<div class="rank-row">
-      <div class="rank-no ${i === 0 ? 'top' : ''}">${i + 1}</div>
+      <div class="rank-no ${i < 3 ? 'r' + (i + 1) : ''}">${i + 1}</div>
       <div class="rank-main">
         <div class="nm">${esc(r.name)}</div>
         <div class="sub">¥${fmt2(r.unitPrice)} / 件 × ${r.dailyUsage} 件/天</div>
@@ -2918,28 +2931,28 @@ function renderMe() {
   html += `<div class="section-h"><h2>${icon('download', 18)} 数据</h2><span class="sub">${lastBackup ? `上次备份 ${dateLabel(lastBackup)}${backupDays > 7 ? ' · 该备份了' : ''}` : '从未备份'}</span></div>
   <div class="list-card">
     <button class="list-row" data-act="exportJSON">
-      <span class="ic-wrap" style="background:var(--mint-soft);color:#3D8C74">${icon('download', 18)}</span>
+      <span class="ic-wrap" style="color:#3D8C74">${icon('download', 30)}</span>
       <span class="tt"><span class="a">导出完整备份（JSON）</span><span class="b">全部表结构 + 数据，换设备能完整恢复</span></span>
     </button>
     <button class="list-row" data-act="exportCSV">
-      <span class="ic-wrap" style="background:var(--surface-alt);color:#8C7A64">${icon('edit', 18)}</span>
+      <span class="ic-wrap" style="color:#8C7A64">${icon('edit', 30)}</span>
       <span class="tt"><span class="a">导出账单（CSV）</span><span class="b">可用 Excel 二次分析</span></span>
     </button>
     <button class="list-row" data-act="importJSON">
-      <span class="ic-wrap" style="background:#EFE9FB;color:#7A66AC">${icon('upload', 18)}</span>
+      <span class="ic-wrap" style="color:#7A66AC">${icon('upload', 30)}</span>
       <span class="tt"><span class="a">从备份恢复</span><span class="b">会覆盖当前全部数据，导入前会确认</span></span>
     </button>
     <button class="list-row" data-act="openSnapshots">
-      <span class="ic-wrap" style="background:#EFF6F1;color:#5E8B72">${icon('refresh', 18)}</span>
-      <span class="tt"><span class="a">从浏览器快照恢复</span><span class="b">最近 7 份，点开挑一份回退</span></span>
+      <span class="ic-wrap" style="color:#5E8B72">${icon('refresh', 30)}</span>
+      <span class="tt"><span class="a">${isNative() ? '从本地备份恢复' : '从浏览器快照恢复'}</span><span class="b">最近 7 份，点开挑一份回退</span></span>
     </button>
     <button class="list-row" data-act="snapshotNow">
-      <span class="ic-wrap" style="background:var(--surface-alt)">${icon('refresh', 18)}</span>
-      <span class="tt"><span class="a">立即生成快照</span><span class="b">浏览器内保留最近 7 份</span></span>
+      <span class="ic-wrap">${icon('refresh', 30)}</span>
+      <span class="tt"><span class="a">${isNative() ? '立即生成备份' : '立即生成快照'}</span><span class="b">${isNative() ? 'App 文档目录保留最近 7 份' : '浏览器内保留最近 7 份'}</span></span>
     </button>
     <button class="list-row" data-act="toggleAutoBackup">
-      <span class="ic-wrap" style="background:var(--surface-alt)">${icon('clock', 18)}</span>
-      <span class="tt"><span class="a">自动快照</span><span class="b">每小时最多一份</span></span>
+      <span class="ic-wrap">${icon('clock', 30)}</span>
+      <span class="tt"><span class="a">${isNative() ? '自动备份' : '自动快照'}</span><span class="b">每小时最多一份</span></span>
       <span style="width:44px;height:26px;border-radius:13px;background:${state.meta.autoBackup ? 'var(--mint)' : '#E3D7C7'};position:relative;flex:none;transition:background .2s">
         <span style="position:absolute;top:3px;left:${state.meta.autoBackup ? '21px' : '3px'};width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s var(--ease-spring)"></span>
       </span>
@@ -2948,12 +2961,14 @@ function renderMe() {
 
   html += `<div class="section-h"><h2>${icon('info', 18)} 关于</h2></div>
   <div class="list-card">
-    <div class="list-row"><span class="tt"><span class="a">宠物账本 v1</span><span class="b">纯 Web · 数据只存在这台设备的浏览器里</span></span><span class="tag-mini">离线可用</span></div>
+    <div class="list-row"><span class="tt"><span class="a">宠物账本 v${APP_VERSION}</span></span><span class="tag-mini">离线可用</span></div>
     <button class="list-row" data-act="loadDemo"><span class="tt"><span class="a">载入示例数据</span><span class="b">两只宠物 + 4 个月账单，用来试功能</span></span></button>
     <button class="list-row" data-act="clearData"><span class="tt"><span class="a" style="color:var(--danger)">清空全部数据</span><span class="b">不可撤销，建议先导出备份</span></span></button>
   </div>
   <div class="hint" style="margin:14px 4px 0;line-height:1.7">
-    ${icon('alert', 12)} 浏览器存储可能被清理（清缓存、Safari 7 天未访问回收、隐身模式关闭）。<b>数据安全只能靠定期导出兜底</b>，这是纯 Web 形态的真实代价。动效会跟随系统的「减少动态效果」设置自动降级。
+    ${icon('alert', 12)} ${isNative()
+      ? '数据保存在 App 本地数据库，并每小时自动备份到 App 文档目录。<b>换设备请用上面的「导出完整备份」迁移</b>。'
+      : '浏览器存储可能被清理（清缓存、Safari 7 天未访问回收、隐身模式关闭）。<b>数据安全只能靠定期导出兜底</b>。'}动效会跟随系统的「减少动态效果」设置自动降级。
   </div>`;
 
   return html;
@@ -3988,6 +4003,20 @@ function updateChrome() {
    ============================================================ */
 function bindEvents() {
   document.addEventListener('click', onClick);
+
+  /* 全局触感：所有可点元素都触发一次轻震；主操作/保存用 medium。
+     由于监听器注册在 onClick 之后且 haptic() 有 90ms 去重，
+     已有语义震动（success/warning）的交互不会被重复震两下。 */
+  document.addEventListener('click', e => {
+    const el = e.target.closest('button, [data-act], .list-row, .tab, .opt, .chip, .fab, .avatar-opt, .switch, input[type="checkbox"], input[type="radio"]');
+    if (!el || el.disabled) return;
+    if (el.dataset && el.dataset.nohaptic === '1') return;
+    const act = el.dataset && el.dataset.act;
+    const primary = el.classList.contains('btn-primary') ||
+      act === 'savePurchase' || act === 'savePet' || act === 'saveProduct' ||
+      act === 'saveCategory' || act === 'saveLocation' || act === 'confirmAdjust';
+    haptic(primary ? 'medium' : 'tap');
+  });
   document.addEventListener('input', onInput);
   document.addEventListener('change', onChange);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
@@ -4175,7 +4204,7 @@ function onClick(e) {
       render();
       if (done > 0) {
         floatText('-1', anchor.x, anchor.y);
-        haptic('tap');
+        haptic('light');
         setTimeout(() => Toast.show('已出库 1 件'), 80);
       } else {
         Toast.show('这件已经没有库存了');

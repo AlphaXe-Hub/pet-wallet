@@ -345,6 +345,7 @@ function commit(fn) {
   persist();
   broadcast();
   snapshotMaybe();
+  try { if (typeof scheduleWatchSync === 'function') scheduleWatchSync(); } catch (e) { /* ignore */ }
 }
 
 /* 每小时最多做一次文件备份（原生）／IndexedDB 快照（Web） */
@@ -475,5 +476,7 @@ async function initStore() {
   const lastOpen = state.meta.lastOpenAt;
   state.meta.lastOpenAt = todayISO();
   persist();
+  /* 启动后补写一次手表快照，保证手表/桌面侧随时有可读数据 */
+  try { if (typeof writeWatchSnapshot === 'function') setTimeout(writeWatchSnapshot, 1200); } catch (e) { /* ignore */ }
   return { fresh: !loaded, lastOpen };
 }

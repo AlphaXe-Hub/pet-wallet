@@ -285,9 +285,10 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 .prod-card.warn{box-shadow:0 0 0 1.5px #FBDDB2, var(--shadow-1)}
 .prod-card.danger{box-shadow:0 0 0 1.5px #F5C6C1, var(--shadow-1)}
 .prod-ic{
-  width:42px;height:42px;border-radius:14px;flex:none;
+  width:46px;height:46px;border-radius:0;flex:none;background:transparent;
   display:flex;align-items:center;justify-content:center;
 }
+.prod-ic img,.prod-ic svg{width:40px;height:40px;object-fit:contain}
 .prod-main{flex:1;min-width:0}
 .prod-name{font-size:15px;font-weight:700;line-height:1.3;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .prod-name .spec{font-size:11px;font-weight:600;color:var(--ink-3);background:var(--surface-alt);border-radius:6px;padding:1px 5px}
@@ -560,7 +561,8 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
   display:flex;align-items:center;gap:10px;width:100%;padding:12px;
   border-radius:var(--r-md);background:var(--surface-alt);text-align:left;
 }
-.prod-pick .pic{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none}
+.prod-pick .pic{width:42px;height:42px;border-radius:0;display:flex;align-items:center;justify-content:center;flex:none;background:transparent}
+.prod-pick .pic img,.prod-pick .pic svg{width:36px;height:36px;object-fit:contain}
 .prod-pick .txt{flex:1;min-width:0}
 .prod-pick .txt .a{font-size:15px;font-weight:700;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .prod-pick .txt .b{font-size:11px;color:var(--ink-3)}
@@ -2037,7 +2039,7 @@ async function initStore() {
 
 /* ==================== ui.js ==================== */
 /* 应用版本（关于页显示，发布时同步 tag） */
-const APP_VERSION = '1.1.2';
+const APP_VERSION = '1.1.3';
 
 /* ============================================================
    图形资产：手写线描图标 / 宠物头像 / 品类图标
@@ -2410,7 +2412,7 @@ function selectField(label, attrs, options) {
 function optionList(items, selectedId, act) {
   return `<div class="opt-list">${items.map(it => `
     <button class="opt ${it.id === selectedId ? 'on' : ''}" data-act="${act}" data-id="${it.id}">
-      <span class="oi" style="background:${it.color ? hexA(it.color, .14) : '#FFF3E4'};color:${it.color || '#7A736B'}">${it.iconHTML || icon('box', 18)}</span>
+      <span class="oi" style="background:transparent;color:${it.color || '#7A736B'}">${it.iconHTML || icon('box', 30)}</span>
       <span class="ot"><span class="a">${esc(it.name)}</span><span class="b">${it.sub || ''}</span></span>
       ${it.id === selectedId ? icon('check', 18) : ''}
     </button>`).join('')}</div>`;
@@ -2646,7 +2648,7 @@ function productCardHTML(r, today, mode) {
   const cls = st.qty <= 0 ? 'danger' : (es === 'expired' || es === 'soon' || (rd !== null && rd < (cat && cat.lowStockDays != null ? cat.lowStockDays : 5))) ? 'warn' : '';
   const petTag = p.petId ? petById(p.petId) : null;
   return `<div class="prod-card ${cls}" data-act="openProduct" data-id="${p.id}">
-    <div class="prod-ic" style="background:${hexA(color, .15)};color:${color}">${catIcon(cat ? cat.icon : 'gift', 22)}</div>
+    <div class="prod-ic" style="color:${color}">${catIcon(cat ? cat.icon : 'gift', 36)}</div>
     <div class="prod-main">
       <div class="prod-name">${esc(p.name)}${p.spec ? `<span class="spec">${esc(p.spec)}</span>` : ''}${petTag ? `<span class="pill" style="height:18px;font-size:10px;background:#FDECF4;color:#B4668C">${esc(petTag.name)}专属</span>` : ''}</div>
       <div class="prod-meta">
@@ -2683,7 +2685,7 @@ function openFilterSheet() {
       <div class="opt-list">
         <button class="opt ${pantryFilter.cat === 'all' ? 'on' : ''}" data-act="pickFilter" data-kind="cat" data-id="all"><span class="oi">${icon('paw', 18)}</span><span class="ot"><span class="a">全部品类</span></span></button>
         ${cats.map(c => `<button class="opt ${pantryFilter.cat === c.id ? 'on' : ''}" data-act="pickFilter" data-kind="cat" data-id="${c.id}">
-          <span class="oi" style="background:${hexA(c.color, .14)};color:${c.color}">${catIcon(c.icon, 18)}</span>
+          <span class="oi" style="background:transparent;color:${c.color}">${catIcon(c.icon, 32)}</span>
           <span class="ot"><span class="a">${esc(c.name)}</span><span class="b">${c.remindDays} 天临期提醒 · 保质期 ${c.shelfLifeDays || '未设'} ${c.shelfLifeDays ? '天' : ''}</span></span>
         </button>`).join('')}
       </div></div>`,
@@ -3159,7 +3161,7 @@ function openPetDetail(petId) {
     const rd = remainingDays(st.qty, p.dailyUsage);
     const es = expiryStatus(st.earliestExpiry, today, resolveRemindDays(p, cat));
     return `<button class="prod-card" style="width:100%;text-align:left" data-act="openProduct" data-id="${p.id}">
-      <div class="prod-ic" style="background:${hexA(cat ? cat.color : '#C9B8E8', .15)};color:${cat ? cat.color : '#C9B8E8'}">${catIcon(cat ? cat.icon : 'gift', 20)}</div>
+      <div class="prod-ic" style="background:transparent;color:${cat ? cat.color : '#C9B8E8'}">${catIcon(cat ? cat.icon : 'gift', 36)}</div>
       <div class="prod-main"><div class="prod-name">${esc(p.name)}</div>
         <div class="prod-meta"><span>${fmt2(st.qty)} ${esc(p.unit)}</span><span class="sep">·</span><span>${rd === null ? '未设日均' : '剩 ' + rd + ' 天'}</span>
         ${es === 'soon' || es === 'expired' ? `<span class="pill ${es}">${es === 'expired' ? '已过期' : '临期'}</span>` : ''}</div>
@@ -3211,7 +3213,7 @@ function openProductDetail(productId) {
   const unitPrice = lastPrice(p.id);
 
   let body = `<div class="detail-hero">
-    <div class="av" style="border-radius:20px;display:flex;align-items:center;justify-content:center;background:${hexA(cat ? cat.color : '#C9B8E8', .15)};color:${cat ? cat.color : '#C9B8E8'}">
+    <div class="av" style="border-radius:0;display:flex;align-items:center;justify-content:center;background:transparent;color:${cat ? cat.color : '#C9B8E8'}">
       ${catIcon(cat ? cat.icon : 'gift', 40)}
     </div>
     <div style="flex:1;min-width:0">
@@ -3299,7 +3301,7 @@ function productFormBody() {
   return `<div class="field"><label>商品名</label><input class="input" id="prodName" value="${esc(d.name)}" placeholder="荒野盛宴 鸡肉粮" maxlength="24"></div>
   <div class="field"><label>品类</label>
     <div class="opt-list">${cats.map(c => `<button class="opt ${d.categoryId === c.id ? 'on' : ''}" data-act="pickProductCat" data-id="${c.id}">
-      <span class="oi" style="background:${hexA(c.color, .14)};color:${c.color}">${catIcon(c.icon, 18)}</span>
+      <span class="oi" style="background:transparent;color:${c.color}">${catIcon(c.icon, 32)}</span>
       <span class="ot"><span class="a">${esc(c.name)}</span><span class="b">临期 ${c.remindDays} 天 · 保质期 ${c.shelfLifeDays || '未设'}${c.shelfLifeDays ? ' 天' : ''}</span></span>
     </button>`).join('')}</div>
   </div>
@@ -3532,7 +3534,7 @@ function purchaseLineHTML(l, idx) {
       ${purchaseDraft.lines.length > 1 ? `<button class="sheet-close" data-act="removeLine" data-idx="${idx}" style="width:26px;height:26px" aria-label="删除这行">${icon('close', 13)}</button>` : ''}
     </div>
     <button class="prod-pick" data-act="pickProduct" data-idx="${idx}">
-      <span class="pic" style="background:${hexA(cat ? cat.color : '#EFE2CE', .18)};color:${cat ? cat.color : '#A99A88'}">${p ? catIcon(cat ? cat.icon : 'gift', 18) : icon('plus', 18)}</span>
+      <span class="pic" style="background:transparent;color:${cat ? cat.color : '#A99A88'}">${p ? catIcon(cat ? cat.icon : 'gift', 34) : icon('plus', 30)}</span>
       <span class="txt">
         <span class="a">${p ? esc(p.name) : '选择商品'}</span>
         <span class="b">${p ? `${esc(cat ? cat.name : '')}${p.spec ? ' · ' + esc(p.spec) : ''} · 上次 ¥${lastPrice(p.id) == null ? '—' : fmt2(lastPrice(p.id))}` : '可以搜索，也可以现场新建'}</span>
@@ -3631,7 +3633,7 @@ function productOptionHTML(p, idx) {
   const price = lastPrice(p.id);
   const st = productStock(p.id);
   return `<button class="opt" data-act="chooseProduct" data-id="${p.id}" data-idx="${idx}" data-name="${esc(p.name)}">
-    <span class="oi" style="background:${hexA(cat ? cat.color : '#C9B8E8', .14)};color:${cat ? cat.color : '#C9B8E8'}">${catIcon(cat ? cat.icon : 'gift', 18)}</span>
+    <span class="oi" style="background:transparent;color:${cat ? cat.color : '#C9B8E8'}">${catIcon(cat ? cat.icon : 'gift', 32)}</span>
     <span class="ot"><span class="a">${esc(p.name)}</span><span class="b">${esc(cat ? cat.name : '')}${p.spec ? ' · ' + esc(p.spec) : ''} · 在库 ${fmt2(st.qty)} ${esc(p.unit)}${price != null ? ' · 上次 ¥' + fmt2(price) : ''}</span></span>
     ${p.petId ? `<span class="tag-mini">${esc((petById(p.petId) || {}).name || '')}专属</span>` : ''}
   </button>`;
@@ -3692,7 +3694,7 @@ function openPurchaseDetail(id) {
       const cat = catById(prod ? prod.categoryId : '');
       const loc = locById(i.locationId);
       return `<div class="prod-card" style="padding:11px 12px">
-        <div class="prod-ic" style="width:36px;height:36px;border-radius:11px;background:${hexA(cat ? cat.color : '#C9B8E8', .14)};color:${cat ? cat.color : '#C9B8E8'}">${catIcon(cat ? cat.icon : 'gift', 17)}</div>
+        <div class="prod-ic" style="background:transparent;color:${cat ? cat.color : '#C9B8E8'}">${catIcon(cat ? cat.icon : 'gift', 34)}</div>
         <div class="prod-main">
           <div class="prod-name" style="font-size:14px">${esc(prod ? prod.name : '已删除商品')}</div>
           <div class="prod-meta">${fmt2(i.qty)} ${esc(prod ? prod.unit : '件')} × ¥${fmt2(i.unitPrice)}${loc ? ' · ' + esc(loc.name) : ''}${i.expiryDate ? ' · ' + i.expiryDate + ' 到期' : ''}</div>

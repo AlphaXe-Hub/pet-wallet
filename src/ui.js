@@ -1,5 +1,5 @@
 /* 应用版本（关于页显示，发布时同步 tag） */
-const APP_VERSION = '1.1.2';
+const APP_VERSION = '1.1.3';
 
 /* ============================================================
    图形资产：手写线描图标 / 宠物头像 / 品类图标
@@ -372,7 +372,7 @@ function selectField(label, attrs, options) {
 function optionList(items, selectedId, act) {
   return `<div class="opt-list">${items.map(it => `
     <button class="opt ${it.id === selectedId ? 'on' : ''}" data-act="${act}" data-id="${it.id}">
-      <span class="oi" style="background:${it.color ? hexA(it.color, .14) : '#FFF3E4'};color:${it.color || '#7A736B'}">${it.iconHTML || icon('box', 18)}</span>
+      <span class="oi" style="background:transparent;color:${it.color || '#7A736B'}">${it.iconHTML || icon('box', 30)}</span>
       <span class="ot"><span class="a">${esc(it.name)}</span><span class="b">${it.sub || ''}</span></span>
       ${it.id === selectedId ? icon('check', 18) : ''}
     </button>`).join('')}</div>`;

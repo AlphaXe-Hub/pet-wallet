@@ -204,7 +204,7 @@ function productCardHTML(r, today, mode) {
   const cls = st.qty <= 0 ? 'danger' : (es === 'expired' || es === 'soon' || (rd !== null && rd < (cat && cat.lowStockDays != null ? cat.lowStockDays : 5))) ? 'warn' : '';
   const petTag = p.petId ? petById(p.petId) : null;
   return `<div class="prod-card ${cls}" data-act="openProduct" data-id="${p.id}">
-    <div class="prod-ic" style="background:${hexA(color, .15)};color:${color}">${catIcon(cat ? cat.icon : 'gift', 22)}</div>
+    <div class="prod-ic" style="color:${color}">${catIcon(cat ? cat.icon : 'gift', 36)}</div>
     <div class="prod-main">
       <div class="prod-name">${esc(p.name)}${p.spec ? `<span class="spec">${esc(p.spec)}</span>` : ''}${petTag ? `<span class="pill" style="height:18px;font-size:10px;background:#FDECF4;color:#B4668C">${esc(petTag.name)}专属</span>` : ''}</div>
       <div class="prod-meta">
@@ -241,7 +241,7 @@ function openFilterSheet() {
       <div class="opt-list">
         <button class="opt ${pantryFilter.cat === 'all' ? 'on' : ''}" data-act="pickFilter" data-kind="cat" data-id="all"><span class="oi">${icon('paw', 18)}</span><span class="ot"><span class="a">全部品类</span></span></button>
         ${cats.map(c => `<button class="opt ${pantryFilter.cat === c.id ? 'on' : ''}" data-act="pickFilter" data-kind="cat" data-id="${c.id}">
-          <span class="oi" style="background:${hexA(c.color, .14)};color:${c.color}">${catIcon(c.icon, 18)}</span>
+          <span class="oi" style="background:transparent;color:${c.color}">${catIcon(c.icon, 32)}</span>
           <span class="ot"><span class="a">${esc(c.name)}</span><span class="b">${c.remindDays} 天临期提醒 · 保质期 ${c.shelfLifeDays || '未设'} ${c.shelfLifeDays ? '天' : ''}</span></span>
         </button>`).join('')}
       </div></div>`,

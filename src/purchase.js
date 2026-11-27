@@ -79,7 +79,7 @@ function purchaseLineHTML(l, idx) {
       ${purchaseDraft.lines.length > 1 ? `<button class="sheet-close" data-act="removeLine" data-idx="${idx}" style="width:26px;height:26px" aria-label="删除这行">${icon('close', 13)}</button>` : ''}
     </div>
     <button class="prod-pick" data-act="pickProduct" data-idx="${idx}">
-      <span class="pic" style="background:${hexA(cat ? cat.color : '#EFE2CE', .18)};color:${cat ? cat.color : '#A99A88'}">${p ? catIcon(cat ? cat.icon : 'gift', 18) : icon('plus', 18)}</span>
+      <span class="pic" style="background:transparent;color:${cat ? cat.color : '#A99A88'}">${p ? catIcon(cat ? cat.icon : 'gift', 34) : icon('plus', 30)}</span>
       <span class="txt">
         <span class="a">${p ? esc(p.name) : '选择商品'}</span>
         <span class="b">${p ? `${esc(cat ? cat.name : '')}${p.spec ? ' · ' + esc(p.spec) : ''} · 上次 ¥${lastPrice(p.id) == null ? '—' : fmt2(lastPrice(p.id))}` : '可以搜索，也可以现场新建'}</span>
@@ -178,7 +178,7 @@ function productOptionHTML(p, idx) {
   const price = lastPrice(p.id);
   const st = productStock(p.id);
   return `<button class="opt" data-act="chooseProduct" data-id="${p.id}" data-idx="${idx}" data-name="${esc(p.name)}">
-    <span class="oi" style="background:${hexA(cat ? cat.color : '#C9B8E8', .14)};color:${cat ? cat.color : '#C9B8E8'}">${catIcon(cat ? cat.icon : 'gift', 18)}</span>
+    <span class="oi" style="background:transparent;color:${cat ? cat.color : '#C9B8E8'}">${catIcon(cat ? cat.icon : 'gift', 32)}</span>
     <span class="ot"><span class="a">${esc(p.name)}</span><span class="b">${esc(cat ? cat.name : '')}${p.spec ? ' · ' + esc(p.spec) : ''} · 在库 ${fmt2(st.qty)} ${esc(p.unit)}${price != null ? ' · 上次 ¥' + fmt2(price) : ''}</span></span>
     ${p.petId ? `<span class="tag-mini">${esc((petById(p.petId) || {}).name || '')}专属</span>` : ''}
   </button>`;
@@ -239,7 +239,7 @@ function openPurchaseDetail(id) {
       const cat = catById(prod ? prod.categoryId : '');
       const loc = locById(i.locationId);
       return `<div class="prod-card" style="padding:11px 12px">
-        <div class="prod-ic" style="width:36px;height:36px;border-radius:11px;background:${hexA(cat ? cat.color : '#C9B8E8', .14)};color:${cat ? cat.color : '#C9B8E8'}">${catIcon(cat ? cat.icon : 'gift', 17)}</div>
+        <div class="prod-ic" style="background:transparent;color:${cat ? cat.color : '#C9B8E8'}">${catIcon(cat ? cat.icon : 'gift', 34)}</div>
         <div class="prod-main">
           <div class="prod-name" style="font-size:14px">${esc(prod ? prod.name : '已删除商品')}</div>
           <div class="prod-meta">${fmt2(i.qty)} ${esc(prod ? prod.unit : '件')} × ¥${fmt2(i.unitPrice)}${loc ? ' · ' + esc(loc.name) : ''}${i.expiryDate ? ' · ' + i.expiryDate + ' 到期' : ''}</div>

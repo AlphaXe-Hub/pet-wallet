@@ -275,9 +275,10 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 .prod-card.warn{box-shadow:0 0 0 1.5px #FBDDB2, var(--shadow-1)}
 .prod-card.danger{box-shadow:0 0 0 1.5px #F5C6C1, var(--shadow-1)}
 .prod-ic{
-  width:42px;height:42px;border-radius:14px;flex:none;
+  width:46px;height:46px;border-radius:0;flex:none;background:transparent;
   display:flex;align-items:center;justify-content:center;
 }
+.prod-ic img,.prod-ic svg{width:40px;height:40px;object-fit:contain}
 .prod-main{flex:1;min-width:0}
 .prod-name{font-size:15px;font-weight:700;line-height:1.3;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .prod-name .spec{font-size:11px;font-weight:600;color:var(--ink-3);background:var(--surface-alt);border-radius:6px;padding:1px 5px}
@@ -550,7 +551,8 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
   display:flex;align-items:center;gap:10px;width:100%;padding:12px;
   border-radius:var(--r-md);background:var(--surface-alt);text-align:left;
 }
-.prod-pick .pic{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none}
+.prod-pick .pic{width:42px;height:42px;border-radius:0;display:flex;align-items:center;justify-content:center;flex:none;background:transparent}
+.prod-pick .pic img,.prod-pick .pic svg{width:36px;height:36px;object-fit:contain}
 .prod-pick .txt{flex:1;min-width:0}
 .prod-pick .txt .a{font-size:15px;font-weight:700;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .prod-pick .txt .b{font-size:11px;color:var(--ink-3)}

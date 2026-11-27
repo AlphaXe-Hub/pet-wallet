@@ -171,7 +171,7 @@ function openPetDetail(petId) {
     const rd = remainingDays(st.qty, p.dailyUsage);
     const es = expiryStatus(st.earliestExpiry, today, resolveRemindDays(p, cat));
     return `<button class="prod-card" style="width:100%;text-align:left" data-act="openProduct" data-id="${p.id}">
-      <div class="prod-ic" style="background:${hexA(cat ? cat.color : '#C9B8E8', .15)};color:${cat ? cat.color : '#C9B8E8'}">${catIcon(cat ? cat.icon : 'gift', 20)}</div>
+      <div class="prod-ic" style="background:transparent;color:${cat ? cat.color : '#C9B8E8'}">${catIcon(cat ? cat.icon : 'gift', 36)}</div>
       <div class="prod-main"><div class="prod-name">${esc(p.name)}</div>
         <div class="prod-meta"><span>${fmt2(st.qty)} ${esc(p.unit)}</span><span class="sep">·</span><span>${rd === null ? '未设日均' : '剩 ' + rd + ' 天'}</span>
         ${es === 'soon' || es === 'expired' ? `<span class="pill ${es}">${es === 'expired' ? '已过期' : '临期'}</span>` : ''}</div>
@@ -223,7 +223,7 @@ function openProductDetail(productId) {
   const unitPrice = lastPrice(p.id);
 
   let body = `<div class="detail-hero">
-    <div class="av" style="border-radius:20px;display:flex;align-items:center;justify-content:center;background:${hexA(cat ? cat.color : '#C9B8E8', .15)};color:${cat ? cat.color : '#C9B8E8'}">
+    <div class="av" style="border-radius:0;display:flex;align-items:center;justify-content:center;background:transparent;color:${cat ? cat.color : '#C9B8E8'}">
       ${catIcon(cat ? cat.icon : 'gift', 40)}
     </div>
     <div style="flex:1;min-width:0">
@@ -311,7 +311,7 @@ function productFormBody() {
   return `<div class="field"><label>商品名</label><input class="input" id="prodName" value="${esc(d.name)}" placeholder="荒野盛宴 鸡肉粮" maxlength="24"></div>
   <div class="field"><label>品类</label>
     <div class="opt-list">${cats.map(c => `<button class="opt ${d.categoryId === c.id ? 'on' : ''}" data-act="pickProductCat" data-id="${c.id}">
-      <span class="oi" style="background:${hexA(c.color, .14)};color:${c.color}">${catIcon(c.icon, 18)}</span>
+      <span class="oi" style="background:transparent;color:${c.color}">${catIcon(c.icon, 32)}</span>
       <span class="ot"><span class="a">${esc(c.name)}</span><span class="b">临期 ${c.remindDays} 天 · 保质期 ${c.shelfLifeDays || '未设'}${c.shelfLifeDays ? ' 天' : ''}</span></span>
     </button>`).join('')}</div>
   </div>

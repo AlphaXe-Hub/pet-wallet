@@ -26,5 +26,16 @@
 	<string>com.xuchenzhe.petwallet</string>
 	<key>WKRunsIndependentlyOfCompanionApp</key>
 	<false/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.xuchenzhe.petwallet</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>petwallet</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

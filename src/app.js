@@ -545,6 +545,13 @@ function syncPurchaseGuard() {
   bindEvents();
   mountChrome();
   render();
+  try { if (typeof initWatchInbox === 'function') initWatchInbox(); } catch (e) { /* ignore */ }
+  try {
+    if (typeof drainWatchInbox === 'function') {
+      await drainWatchInbox();
+      if (typeof render === 'function') render();
+    }
+  } catch (e) { /* ignore */ }
 
 
   if (info.lastOpen && diffDays(info.lastOpen, todayISO()) > 7 && (state.purchases.length || state.products.length)) {

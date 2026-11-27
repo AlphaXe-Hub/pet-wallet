@@ -6,6 +6,9 @@ struct PetWalletWatchApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView().environmentObject(model)
+                .onOpenURL { url in
+                    if url.scheme == "petwallet" { model.pendingQuick = true }
+                }
         }
     }
 }

@@ -24,6 +24,9 @@
 		B2C0A0000000000000000013 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C0A0000000000000000003 /* ContentView.swift */; };
 		B2C0A0000000000000000014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2C0A0000000000000000004 /* Assets.xcassets */; };
 		B2C0A0000000000000000015 /* PetWalletWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = B2C0A0000000000000000006 /* PetWalletWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C3D0000000000000000000A2 /* Notifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D0000000000000000000A1 /* Notifier.swift */; };
+		D4E0000000000000000000B1 /* PetWalletWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E0000000000000000000A1 /* PetWalletWidget.swift */; };
+		D4E0000000000000000000B2 /* PetWalletWatchWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D4E0000000000000000000A3 /* PetWalletWatchWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +50,10 @@
 		B2C0A0000000000000000004 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B2C0A0000000000000000005 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B2C0A0000000000000000006 /* PetWalletWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PetWalletWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3D0000000000000000000A1 /* Notifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifier.swift; sourceTree = "<group>"; };
+		D4E0000000000000000000A1 /* PetWalletWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetWalletWidget.swift; sourceTree = "<group>"; };
+		D4E0000000000000000000A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D4E0000000000000000000A3 /* PetWalletWatchWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PetWalletWatchWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,6 +66,17 @@
 				B2C0A0000000000000000015 /* PetWalletWatch.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E0000000000000000000E4 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D4E0000000000000000000B2 /* PetWalletWatchWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -97,6 +115,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D4E0000000000000000000E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4E0000000000000000000B1 /* PetWalletWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E0000000000000000000E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E0000000000000000000E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -106,6 +146,7 @@
 				958DCC722DB07C7200EA8C5F /* debug.xcconfig */,
 				504EC3061FED79650016851F /* App */,
 				B2C0A0000000000000000021 /* PetWalletWatch */,
+				D4E0000000000000000000C1 /* PetWalletWatchWidget */,
 				504EC3051FED79650016851F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -115,6 +156,7 @@
 			children = (
 				504EC3041FED79650016851F /* App.app */,
 				B2C0A0000000000000000006 /* PetWalletWatch.app */,
+				D4E0000000000000000000A3 /* PetWalletWatchWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -125,6 +167,7 @@
 				9582B6822FE993A50072D4E8 /* SceneDelegate.swift */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
+				C3D0000000000000000000A1 /* Notifier.swift */,
 				A1B2C3D40000000000000002 /* MainViewController.swift */,
 				A1B2C3D40000000000000004 /* WatchBridge.swift */,
 				A1B2C3D40000000000000006 /* WatchSyncService.swift */,
@@ -148,6 +191,15 @@
 				B2C0A0000000000000000005 /* Info.plist */,
 			);
 			path = PetWalletWatch;
+			sourceTree = "<group>";
+		};
+		D4E0000000000000000000C1 /* PetWalletWatchWidget */ = {
+			isa = PBXGroup;
+			children = (
+				D4E0000000000000000000A1 /* PetWalletWidget.swift */,
+				D4E0000000000000000000A2 /* Info.plist */,
+			);
+			path = PetWalletWatchWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -182,15 +234,34 @@
 				B2C0A0000000000000000032 /* Sources */,
 				B2C0A0000000000000000034 /* Frameworks */,
 				B2C0A0000000000000000033 /* Resources */,
+				D4E0000000000000000000E4 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				D4E0000000000000000000D2 /* PBXTargetDependency */,
 			);
 			name = PetWalletWatch;
 			productName = PetWalletWatch;
 			productReference = B2C0A0000000000000000006 /* PetWalletWatch.app */;
 			productType = "com.apple.product-type.application";
+		};
+		D4E0000000000000000000D1 /* PetWalletWatchWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D4E0000000000000000000F3 /* Build configuration list for PBXNativeTarget "PetWalletWatchWidget" */;
+			buildPhases = (
+				D4E0000000000000000000E1 /* Sources */,
+				D4E0000000000000000000E2 /* Frameworks */,
+				D4E0000000000000000000E3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PetWalletWatchWidget;
+			productName = PetWalletWatchWidget;
+			productReference = D4E0000000000000000000A3 /* PetWalletWatchWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -207,6 +278,10 @@
 						ProvisioningStyle = Automatic;
 					};
 					B2C0A0000000000000000031 = {
+						CreatedOnToolsVersion = 27.0;
+						ProvisioningStyle = Automatic;
+					};
+					D4E0000000000000000000D1 = {
 						CreatedOnToolsVersion = 27.0;
 						ProvisioningStyle = Automatic;
 					};
@@ -230,6 +305,7 @@
 			targets = (
 				504EC3031FED79650016851F /* App */,
 				B2C0A0000000000000000031 /* PetWalletWatch */,
+				D4E0000000000000000000D1 /* PetWalletWatchWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -242,6 +318,13 @@
 			remoteGlobalIDString = B2C0A0000000000000000031;
 			remoteInfo = PetWalletWatch;
 		};
+		D4E0000000000000000000D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 504EC2FC1FED79650016851F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D4E0000000000000000000D1;
+			remoteInfo = PetWalletWatchWidget;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXTargetDependency section */
@@ -249,6 +332,11 @@
 			isa = PBXTargetDependency;
 			target = B2C0A0000000000000000031 /* PetWalletWatch */;
 			targetProxy = B2C0A0000000000000000052 /* PBXContainerItemProxy */;
+		};
+		D4E0000000000000000000D2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D4E0000000000000000000D1 /* PetWalletWatchWidget */;
+			targetProxy = D4E0000000000000000000D3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -275,6 +363,7 @@
 			files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				9582B6832FE993A70072D4E8 /* SceneDelegate.swift in Sources */,
+				C3D0000000000000000000A2 /* Notifier.swift in Sources */,
 				A1B2C3D40000000000000001 /* MainViewController.swift in Sources */,
 				A1B2C3D40000000000000003 /* WatchBridge.swift in Sources */,
 				A1B2C3D40000000000000005 /* WatchSyncService.swift in Sources */,
@@ -508,6 +597,58 @@
 			};
 			name = Release;
 		};
+		D4E0000000000000000000F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B7NNTLL77J;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PetWalletWatchWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuchenzhe.petwallet.watchkitapp.widget;
+				PRODUCT_NAME = PetWalletWatchWidget;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		D4E0000000000000000000F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B7NNTLL77J;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PetWalletWatchWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuchenzhe.petwallet.watchkitapp.widget;
+				PRODUCT_NAME = PetWalletWatchWidget;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -534,6 +675,15 @@
 			buildConfigurations = (
 				B2C0A0000000000000000041 /* Debug */,
 				B2C0A0000000000000000042 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D4E0000000000000000000F3 /* Build configuration list for PBXNativeTarget "PetWalletWatchWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D4E0000000000000000000F1 /* Debug */,
+				D4E0000000000000000000F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

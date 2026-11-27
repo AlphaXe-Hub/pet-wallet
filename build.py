@@ -23,7 +23,7 @@ lines.append("};")
 (src / "icons-data.js").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 # ---- 2. 拼接 JS ----
-js_order = ["icons-data.js", "core.js", "persist.js", "snapshot.js", "ui.js", "views.js",
+js_order = ["icons-data.js", "core.js", "persist.js", "snapshot.js", "watchinbox.js", "ui.js", "views.js",
             "views2.js", "forms.js", "purchase.js", "app.js"]
 parts = []
 for name in js_order:

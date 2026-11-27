@@ -16,6 +16,14 @@ struct SnapshotCategory: Decodable {
     let ratio: Double
 }
 
+struct SnapshotProduct: Identifiable, Decodable {
+    let id: String
+    let name: String
+    let qty: Double
+    let unit: String
+    let lastPrice: Double?
+}
+
 struct SnapshotPet: Decodable {
     let name: String
     let breed: String?
@@ -30,6 +38,7 @@ struct WatchSnapshot: Decodable {
     let monthCount: Int
     let categories: [SnapshotCategory]
     let pets: [SnapshotPet]
+    let products: [SnapshotProduct]?
     let streak: Int
     let level: Int
     let totalEntries: Int
@@ -41,6 +50,7 @@ final class WatchModel: NSObject, ObservableObject, WCSessionDelegate {
     @Published var snapshot: WatchSnapshot?
     @Published var updatedAt: Date?
     @Published var reachable: Bool = false
+    @Published var pendingQuick: Bool = false
 
     override init() {
         super.init()
@@ -62,6 +72,21 @@ final class WatchModel: NSObject, ObservableObject, WCSessionDelegate {
             }
         } catch {
             // 忽略解析错误，保留上一份
+        }
+    }
+
+    /// 把快捷操作发回 iPhone（出库 / 补货）。失败时退回 transferUserInfo 保证不丢。
+    func send(_ action: String, productId: String, qty: Int) {
+        let msg: [String: Any] = [
+            "action": action, "productId": productId,
+            "qty": qty, "id": UUID().uuidString
+        ]
+        guard WCSession.isSupported() else { return }
+        let s = WCSession.default
+        if s.activationState == .activated {
+            s.sendMessage(msg, replyHandler: { _ in }, errorHandler: { _ in s.transferUserInfo(msg) })
+        } else {
+            s.transferUserInfo(msg)
         }
     }
 

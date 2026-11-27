@@ -47,7 +47,7 @@ function buildWatchSnapshot() {
   const cb = categoryBreakdown(ledgerEntries(), month, state.categories) || [];
 
   return {
-    schema: 1,
+    schema: 2,
     generatedAt: new Date().toISOString(),
     today,
     alerts: uniq,
@@ -62,6 +62,17 @@ function buildWatchSnapshot() {
       breed: p.breed || speciesLabel(p),
       age: p.birthday ? ageLabel(petAge(p.birthday, today)) : ''
     })),
+    products: activeProducts().slice(0, 30).map(p => {
+      const st = productStock(p.id);
+      const lp = (typeof lastPrice === 'function') ? lastPrice(p.id) : null;
+      return {
+        id: p.id,
+        name: p.name,
+        qty: r2(st.qty || 0),
+        unit: p.unit || '件',
+        lastPrice: lp == null ? null : r2(lp)
+      };
+    }),
     streak: streakInfo(today).current,
     level: levelInfo().level,
     totalEntries: (state.purchases || []).length
@@ -92,5 +103,44 @@ async function writeWatchSnapshot() {
     if (bridge && bridge.sync) {
       try { await bridge.sync(); } catch (e) { /* 手表未配对时静默 */ }
     }
+    scheduleAlertNotifications(snap);
   } catch (e) { /* 静默：不影响主流程 */ }
+}
+
+
+/* ---- 本地通知：临期 / 断货提醒（iPhone 锁屏时镜像到手表）---- */
+async function scheduleAlertNotifications(snap) {
+  if (!isNative()) return;
+  try {
+    const n = nativePlugin('Notifier');
+    if (!n || !n.schedule) return;
+    if (!state.meta.notifAsked) {
+      state.meta.notifAsked = true;
+      try { await n.request(); } catch (e) { /* ignore */ }
+    }
+    const now = Date.now();
+    const items = [];
+    const alerts = (snap && snap.alerts) || [];
+    for (const a of alerts.slice(0, 5)) {
+      const d = a.days;
+      let at;
+      if (d == null) continue;
+      if (d <= 0) {
+        at = now + 60 * 1000;                 // 已过期/已断货：一分钟后提醒一次
+      } else {
+        // 提前一天 09:00 提醒
+        const target = new Date();
+        target.setDate(target.getDate() + Math.max(0, d - 1));
+        target.setHours(9, 0, 0, 0);
+        at = target.getTime();
+        if (at <= now) at = now + 60 * 1000;
+      }
+      const title = '宠物账本 · 补给提醒';
+      const body = (a.kind === 'expire')
+        ? (d < 0 ? `${a.name} 已过期，尽快处理` : `${a.name} ${d} 天后过期`)
+        : `${a.name} 约剩 ${d} 天，该补货了`;
+      items.push({ id: 'a_' + encodeURIComponent(a.name) + '_' + a.kind, title, body, at });
+    }
+    if (items.length) { try { await n.schedule({ items }); } catch (e) { /* ignore */ } }
+  } catch (e) { /* ignore */ }
 }

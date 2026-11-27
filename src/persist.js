@@ -26,6 +26,7 @@ function nativePlugin(id) {
 
 /* ---------- 4.2 SQLite 层（原生） ---------- */
 let sqliteConn = null;
+let sqliteDb = null;
 let sqliteInitp = null;
 
 /* 9 张真表的 DDL。字段与 state 里的对象一一对应，不做任何语义改写。 */
@@ -76,30 +77,34 @@ CREATE INDEX IF NOT EXISTS idx_movement_product ON stock_movement(product_id);
 `;
 
 async function sqliteOpen() {
+  if (sqliteDb) return sqliteDb;
   if (sqliteInitp) return sqliteInitp;
   sqliteInitp = (async () => {
-    const sqlite = nativePlugin('CapacitorSQLite');
-    if (!sqlite) throw new Error('CapacitorSQLite 插件不可用');
-    /* 连接一致性：热重载/多标签页时可能残留旧连接 */
-    try { await sqlite.checkConnectionsConsistency(); } catch (e) { /* ignore */ }
+    const plugin = nativePlugin('CapacitorSQLite');
+    if (!plugin) throw new Error('CapacitorSQLite 插件不可用');
+    /* 关键：必须用 SQLiteConnection 包装类，retrieveConnection/createConnection
+       是它上面的 JS 方法，而不是原生插件方法（原生没有这两个方法）。 */
+    const pkg = window.capacitorCapacitorSQLite;
+    const ConnClass = (pkg && pkg.SQLiteConnection) || null;
+    if (!ConnClass) throw new Error('SQLiteConnection 包装类不可用');
+    const wrapper = new ConnClass(plugin);
+    try { await plugin.checkConnectionsConsistency(); } catch (e) { /* ignore */ }
     let hasConn = false;
     try {
-      const r = await sqlite.isConnection({ database: DB_NAME, readonly: false });
+      const r = await plugin.isConnection({ database: DB_NAME, readonly: false });
       hasConn = !!(r && r.result);
     } catch (e) { /* ignore */ }
     if (!hasConn) {
-      await sqlite.createConnection({
-        database: DB_NAME, encrypted: false, mode: 'no-encryption',
-        version: DB_VERSION, readonly: false
-      });
+      try { await wrapper.createConnection(DB_NAME, false, 'no-encryption', DB_VERSION, false); }
+      catch (e) { /* 可能已存在，继续尝试 retrieve */ }
     }
-    const conn = await sqlite.retrieveConnection({ database: DB_NAME, readonly: false });
-    if (!conn) throw new Error('SQLite 连接打开失败');
-    await conn.open();
-    /* 首次建表：逐句执行，execute 支持多语句但拆开更好定位错误 */
+    const db = await wrapper.retrieveConnection(DB_NAME, false);
+    if (!db) throw new Error('SQLite 连接打开失败');
+    await db.open();
     const stmts = SQLITE_SCHEMA.split(';').map(x => x.trim()).filter(Boolean);
-    for (const stmt of stmts) await conn.execute(stmt);
-    return conn;
+    for (const stmt of stmts) await db.execute(stmt);
+    sqliteDb = db;
+    return db;
   })();
   return sqliteInitp;
 }
@@ -236,6 +241,12 @@ async function sqliteSaveAll(conn, state) {
   await conn.executeSet(set, true);
 }
 
+/* Filesystem.readdir 在 iOS 上返回 {files:[{name,uri,size,...}]} 或字符串数组，统一成文件名数组 */
+function fsNames(list) {
+  const arr = (list && list.files) || [];
+  return arr.map(x => (typeof x === 'string' ? x : (x && x.name) || '')).filter(Boolean);
+}
+
 /* ---------- 4.4 文件备份（Documents/backups，真第二副本） ---------- */
 async function fileBackupMaybe(force) {
   if (!isNative()) return false;
@@ -254,7 +265,7 @@ async function fileBackupMaybe(force) {
     /* 只保留最近 BACKUP_KEEP 份 */
     try {
       const list = await fs.readdir({ path: BACKUP_DIR, directory: 'DOCUMENTS' });
-      const files = (list.files || []).filter(f => f.endsWith('.json')).sort();
+      const files = fsNames(list).filter(f => f.endsWith('.json')).sort();
       for (const f of files.slice(0, Math.max(0, files.length - BACKUP_KEEP))) {
         try { await fs.deleteFile({ path: `${BACKUP_DIR}/${f}`, directory: 'DOCUMENTS' }); } catch (e) { /* ignore */ }
       }
@@ -360,7 +371,7 @@ async function listSnapshots() {
     try {
       const fs = nativePlugin('Filesystem');
       const list = await fs.readdir({ path: BACKUP_DIR, directory: 'DOCUMENTS' });
-      const files = (list.files || []).filter(f => f.endsWith('.json')).sort().reverse();
+      const files = fsNames(list).filter(f => f.endsWith('.json')).sort().reverse();
       const out = [];
       for (const f of files) {
         try {
@@ -383,18 +394,55 @@ async function listSnapshots() {
   return (list || []).sort((a, b) => b.at - a.at);
 }
 
+/* 从 Documents/backups 里最新的、有实质数据的备份恢复（原生）
+   这是「SQLite 意外为空」时的兜底，保证数据不丢。 */
+async function restoreFromNewestBackup() {
+  if (!isNative()) return null;
+  try {
+    const fs = nativePlugin('Filesystem');
+    if (!fs) return null;
+    const list = await fs.readdir({ path: BACKUP_DIR, directory: 'DOCUMENTS' });
+    const files = fsNames(list).filter(f => f.endsWith('.json')).sort().reverse();
+    for (const f of files) {
+      try {
+        const r = await fs.readFile({ path: `${BACKUP_DIR}/${f}`, directory: 'DOCUMENTS', encoding: 'utf8' });
+        const txt = typeof r.data === 'string' ? r.data : '';
+        if (!txt) continue;
+        const s = normalizeState(JSON.parse(txt));
+        const hasData = s && Array.isArray(s.pets) &&
+          ((s.pets || []).length + (s.purchases || []).length + (s.products || []).length > 0);
+        if (hasData) return s;
+      } catch (e) { /* 跳过坏档 */ }
+    }
+  } catch (e) { /* ignore */ }
+  return null;
+}
+
 /* ---------- 4.7 启动：从权威存储拼回 state ---------- */
 async function initStore() {
   let loaded = null;
 
   if (isNative()) {
+    let restoredFromBackup = false;
     try {
       const conn = await sqliteOpen();
       const s = await sqliteLoadAll(conn);
-      /* 判定「空库」：连内置品类都没有，说明是全新安装 */
-      if (s && Array.isArray(s.pets) && (s.categories || []).length) loaded = normalizeState(s);
+      /* 健康判定：品类在 + 至少一条业务数据，才算真正读到了库 */
+      const hasBiz = s && ((s.pets || []).length + (s.purchases || []).length + (s.products || []).length > 0);
+      if (s && Array.isArray(s.pets) && (s.categories || []).length && hasBiz) {
+        loaded = normalizeState(s);
+      }
     } catch (e) {
-      console.error('[initStore] SQLite 读取失败，回退临时状态', e);
+      console.error('[initStore] SQLite 读取失败', e);
+    }
+    /* SQLite 空/坏 → 从最新备份恢复（数据不丢兜底） */
+    if (!loaded) {
+      const bk = await restoreFromNewestBackup();
+      if (bk) { loaded = bk; restoredFromBackup = true; }
+    }
+    if (restoredFromBackup) {
+      state = loaded;
+      persistNow(); /* 回写 SQLite，恢复权威存储 */
     }
   }
 

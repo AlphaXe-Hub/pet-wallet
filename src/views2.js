@@ -215,7 +215,7 @@ function renderMe() {
   html += `<div class="section-h"><h2>${icon('box', 18)} 品类与提醒</h2><button class="btn btn-ghost" data-act="addCategory">${icon('plus', 14)} 新品类</button></div>
   <div class="list-card">
     ${state.categories.slice().sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0)).map(c => `<button class="list-row" data-act="editCategory" data-id="${c.id}">
-      <span class="ic-wrap" style="background:${hexA(c.color, .14)};color:${c.color}">${catIcon(c.icon, 18)}</span>
+      <span class="ic-plain">${catIcon(c.icon, 32)}</span>
       <span class="tt"><span class="a">${esc(c.name)}${c.builtin ? '' : ' <span class="tag-mini">自定义</span>'}</span><span class="b">临期 ${c.remindDays} 天 · 补货阈值 ${c.lowStockDays} 天 · 保质期 ${c.shelfLifeDays || '未设'}${c.shelfLifeDays ? ' 天' : ''}</span></span>
       <span class="chev">${icon('chev', 16)}</span>
     </button>`).join('')}
@@ -226,7 +226,7 @@ function renderMe() {
     ${state.locations.slice().sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0)).map(l => {
       const n = state.batches.filter(b => b.qtyLeft > 0 && b.locationId === l.id).length;
       return `<button class="list-row" data-act="editLocation" data-id="${l.id}">
-        <span class="ic-wrap">${locIcon(l.icon, 18)}</span>
+        <span class="ic-plain">${locIcon(l.icon, 32)}</span>
         <span class="tt"><span class="a">${esc(l.name)}</span><span class="b">${n} 个批次在库</span></span>
         <span class="chev">${icon('chev', 16)}</span>
       </button>`;

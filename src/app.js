@@ -532,6 +532,7 @@ function syncPurchaseGuard() {
   mountChrome();
   render();
 
+
   if (info.lastOpen && diffDays(info.lastOpen, todayISO()) > 7 && (state.purchases.length || state.products.length)) {
     setTimeout(() => {
       openConfirm({

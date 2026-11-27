@@ -411,6 +411,9 @@ textarea.input{height:auto;padding:12px 14px;line-height:1.5;resize:none}
 .list-row:last-child{border-bottom:0}
 .list-row:active{background:var(--surface-alt)}
 .list-row .ic-wrap{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--surface-alt)}
+/* V1.1: 品类/位置图标去掉底色块，直接放大图标 */
+.list-row .ic-plain{width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex:none;background:transparent}
+.list-row .ic-plain img,.list-row .ic-plain svg{width:32px;height:32px;object-fit:contain}
 .list-row .tt{flex:1;min-width:0}
 .list-row .tt .a{font-size:15px;font-weight:600;display:block}
 .list-row .tt .b{font-size:11px;color:var(--ink-3);display:block;margin-top:1px}
